@@ -1327,12 +1327,16 @@ def test_plugins_058_raw_html_passes_through_scripts_stay_inert_relative_images_
         assert '<img src="pic.png"' in html
         app.idle(1.0)
         assert app.get("app", "markdownPanel.webView.title") != "ran"
+        # The web view draws in WebKit's own process: only the window server's picture has it
+        # (AppKit's rendering of the window leaves it out on some machines, a CI runner's).
         shot = tmp / "shot.png"
-        app.snapshot(shot)
-        img = Image.open(shot).convert("RGB")
-        raw = img.tobytes()
-        reds = sum(1 for i in range(0, len(raw), 3) if raw[i] > 200 and raw[i + 1] < 60 and raw[i + 2] < 60)
-        assert reds > 500, reds
+        main = next(w for w in app.windows() if w.get("main_window")) if any(w.get("main_window") for w in app.windows()) else app.windows()[0]
+
+        def reds():
+            app.call("e2e_snapshot", window=main["number"], path=str(shot), screen=True)
+            raw = Image.open(shot).convert("RGB").tobytes()
+            return sum(1 for i in range(0, len(raw), 3) if raw[i] > 200 and raw[i + 1] < 60 and raw[i + 2] < 60)
+        app.wait(lambda: reds() > 500, timeout=10, message="the picture drawn in the preview")
     finally:
         if markdown_visible(app):
             app.run("Plugins|Markdown Preview")
