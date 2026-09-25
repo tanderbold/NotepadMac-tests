@@ -22,7 +22,13 @@ for a in "${areas[@]}"; do
     line=$(grep -E '^[0-9]+ (passed|failed|error)|(passed|failed|error).* in [0-9.]+s' "$out/$a.log" | tail -1)
     echo "$a: ${line:-no summary} (rc=$rc)"
     echo "| $a | ${line:-no summary} |" >> "$out/summary.md"
-    [ $rc -eq 0 ] || status=1
+    if [ $rc -ne 0 ]; then
+        status=1
+        # What failed and why, in the job's own log (the full log is in the artifact).
+        echo "::group::$a failures"
+        sed -n '/= FAILURES =/,$p;/= ERRORS =/,$p' "$out/$a.log" | head -300
+        echo "::endgroup::"
+    fi
     rm -rf ".work/ci-$a/NotepadMacE2E.app"
 done
 exit $status
