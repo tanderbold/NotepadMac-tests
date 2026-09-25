@@ -131,7 +131,7 @@ def test_git_005_changed_added_and_removed_lines_carry_markers_7_6_and_8(app, tm
     """GIT-005: Changed, added and removed lines carry markers 7, 6 and 8"""
     repo = make_repo(tmp)
     app.open(repo / "a.txt")
-    assert margin_width(app) == 6
+    app.wait(lambda: margin_width(app) == 6, 6, message="the git margin (worked out off the main thread)")
     app.set_text("one\nTWO\nthree\nfour\nfive\n")
     assert wait_markers(app, range(5), [0, CHANGED, 0, 0, ADDED]) == [0, CHANGED, 0, 0, ADDED]
     app.set_text("one\nthree\nfour\n")
@@ -264,7 +264,7 @@ def test_git_012_a_repository_reached_through_var_instead_of_private_var_stil(ap
         repo = make_repo(Path(base))
         doc = app.open(os.path.join(str(repo), "a.txt"))
         assert doc["path"].startswith("/var/")
-        assert "⎇ main" in status_text(app)
+        app.wait(lambda: "⎇ main" in status_text(app), 6, message="the branch in the status bar")
         app.set_text("ONE\ntwo\nthree\nfour\n")
         assert wait_markers(app, range(4), [CHANGED, 0, 0, 0]) == [CHANGED, 0, 0, 0]
     finally:
@@ -307,6 +307,8 @@ def test_git_014_the_status_bar_ends_with_the_branch_inside_a_repository(app, tm
     git(repo, "checkout", "-q", "-b", "topic")
     app.open(repo / "a.txt")
     branch = git(repo, "rev-parse", "--abbrev-ref", "HEAD")
+    # The branch is read off the main thread and shown a moment after the tab.
+    app.wait(lambda: status_text(app).endswith(f"    ⎇ {branch}"), 6, message="the branch in the status bar")
     text = status_text(app)
     assert text.endswith(f"    ⎇ {branch}"), text
     assert text.index("INS") < text.index("⎇")
@@ -975,6 +977,7 @@ def test_git_048_fetch_from_a_missing_remote_ends_failed_with_git_s_complaint(ap
     repo = make_repo(tmp)
     git(repo, "remote", "add", "origin", "/nonexistent/remote")
     app.open(repo / "a.txt")
+    app.wait(lambda: status_text(app).endswith("⎇ main"), 6, message="the branch in the status bar")
     before = status_text(app)
     since = len(console_text(app))
     run_git(app, "Fetch")

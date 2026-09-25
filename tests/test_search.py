@@ -3627,3 +3627,32 @@ def test_search_153_the_search_menu_carries_every_command_enabled(app):
     wanted = {"Style All Occurrences of Token", "Style One Token", "Clear Style", "Jump Up", "Jump Down",
               "Copy Styled Text", "Bookmark", "Change History"}
     assert (missing, wrong, disabled, wanted - subs) == ([], {}, [], set())
+
+
+
+@pytest.mark.case("SEARCH-154")
+def test_search_154_anchors_and_replace_all_on_crlf_text_as_boost_does(app):
+    """SEARCH-154: '^', '$', \\s+$ and \\R on CRLF text replace as Boost does
+
+    Covers: IDM_SEARCH_REPLACE, IDM_SEARCH_FIND
+    Channel: ui
+    Steps: Regular expression mode. Replace All "$" → ";" in "a\\r\\nb\\r\\n"; "^" → ">" in "a\\r\\nb\\r\\n"; "\\s+$" → "" in "a \\r\\nb\\t\\r\\nc"; "\\R" → "|" in "a\\r\\nb\\nc\\rd"; "a*" → "-" in "baac"; then Count "$" in "ab\\r\\ncd\\r\\n".
+    Expect: "a;\\r\\nb;\\r\\n;", ">a\\r\\n>b\\r\\n>", "a\\r\\nb\\r\\nc", "a|b|c|d", "-b-c-" (Boost's '^' and '$' never stand between CR and LF, '^' also starts the empty last line, and Replace All takes no empty match right after the previous match: SCFIND_REGEXP_EMPTYMATCH_NOTAFTERMATCH); Count "$" reads "Count: 0 matches" (Count takes no empty match, EMPTYMATCH_NONE)
+    """
+    app.new("x\n")
+    d = fresh_dlg(app, "IDM_SEARCH_REPLACE")
+    d.set_mode(2)
+    for doc, what, with_, want in [("a\r\nb\r\n", "$", ";", "a;\r\nb;\r\n;"),
+                                   ("a\r\nb\r\n", "^", ">", ">a\r\n>b\r\n>"),
+                                   ("a \r\nb\t\r\nc", r"\s+$", "", "a\r\nb\r\nc"),
+                                   ("a\r\nb\nc\rd", r"\R", "|", "a|b|c|d"),
+                                   ("baac", "a*", "-", "-b-c-")]:
+        app.set_text(doc)
+        d.set("what", what)
+        d.set("with", with_)
+        d.press("Replace All")
+        assert app.text() == want, (doc, what)
+    d = fresh_dlg(app)
+    d.set_mode(2)
+    app.set_text("ab\r\ncd\r\n")
+    assert do_count(d, "$") == count_status(0)

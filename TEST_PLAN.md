@@ -12,7 +12,7 @@ How the tests drive the application: `HARNESS.md`.
 | [EDIT — Edit menu](#edit) | 107 |
 | [TYPING — Editor behaviour while typing](#typing) | 48 |
 | [MACRO — Macro menu](#macro) | 19 |
-| [SEARCH — The Search menu and the Find dialog](#search) | 153 |
+| [SEARCH — The Search menu and the Find dialog](#search) | 154 |
 | [VIEW — The View menu](#view) | 92 |
 | [UI — The window's chrome and panels](#ui) | 67 |
 | [L10N — Localization of the interface](#l10n) | 18 |
@@ -30,7 +30,8 @@ How the tests drive the application: `HARNESS.md`.
 | [CLI — The nppmac tool and the application's command-line switches](#cli) | 31 |
 | [WINDOW — Window menu, the "▼" and "(root)" entries, and the Help ("?") menu](#window) | 19 |
 | [VISUAL — What the window shows, in pixels](#visual) | 14 |
-| **Total** | **1298** |
+| [A11Y — Accessibility: what VoiceOver is told, and the keyboard](#a11y) | 19 |
+| **Total** | **1318** |
 
 Menu commands covered: 579 of 579.
 
@@ -882,13 +883,13 @@ marked xfail with the defect in its reason and reported as an issue in the Notep
 - Covers: IDM_EDIT_SPLIT_LINES
 - Channel: mcp, prefs
 - Steps: Set edgeMode=1 and edgeColumns="8" (applied); new document "aaa bbb ccc ddd eee fff\nshort\n"; select all; run the command; restore the preferences.
-- Expect: "aaa bbb\nccc ddd\neee fff\nshort\n"; no produced line is longer than 8 characters; the short line is untouched.
+- Expect: "aaa bbb \nccc ddd \neee fff\nshort\n" (SCI_LINESSPLIT at the width of 9 "P"s, as upstream: the line breaks after the space, which stays on the line above); the short line is untouched.
 
 #### EDIT-038: Join Lines joins with single spaces
 - Covers: IDM_EDIT_JOIN_LINES
 - Channel: mcp
-- Steps: New document "a\nb\nc"; select from 1:1 to 2:2 and run the command; then with no selection on "a\nb\nc\n"; then on a one-line document "x\n".
-- Expect: "a b\nc"; "a b c\n" (the last line ending is kept); "x\n" unchanged.
+- Steps: New document "a\nb\nc"; select from 1:1 to 2:2 and run the command; then select all of "a\nb\nc\n" and run it; then run it with only a caret on "a\nb\nc\n"; then on a one-line document "x\n".
+- Expect: "a b\nc"; "a b c\n" (the last line ending is kept); with only a caret nothing changes (upstream joins the selected lines only: a one-line range does nothing); "x\n" unchanged.
 
 #### EDIT-039: Move Up and Move Down Current Line
 - Covers: IDM_EDIT_LINE_UP, IDM_EDIT_LINE_DOWN
@@ -2739,6 +2740,14 @@ Everything under the Search menu (66 commands in `plan/commands.tsv`) and the Fi
 - Channel: menu
 - Steps: e2e_menu for every Search command id of plan/commands.tsv; e2e_menu tree "Search" depth 3.
 - Expect: every id resolves to an enabled item whose title matches commands.tsv (with "…" for "..."), under the submenus Style All Occurrences of Token, Style One Token, Clear Style, Jump Up, Jump Down, Copy Styled Text, Bookmark, Change History; IDM_SEARCH_CLEAR_BOOKMARKS must be among them (see SEARCH-127)
+
+### Line ends in regular expressions
+
+#### SEARCH-154: '^', '$', \s+$ and \R on CRLF text replace as Boost does
+- Covers: IDM_SEARCH_REPLACE, IDM_SEARCH_FIND
+- Channel: ui
+- Steps: Regular expression mode. Replace All "$" → ";" in "a\r\nb\r\n"; "^" → ">" in "a\r\nb\r\n"; "\s+$" → "" in "a \r\nb\t\r\nc"; "\R" → "|" in "a\r\nb\nc\rd"; "a*" → "-" in "baac"; then Count "$" in "ab\r\ncd\r\n".
+- Expect: "a;\r\nb;\r\n;", ">a\r\n>b\r\n>", "a\r\nb\r\nc", "a|b|c|d", "-b-c-" (Boost's '^' and '$' never stand between CR and LF, '^' also starts the empty last line, and Replace All takes no empty match right after the previous match: SCFIND_REGEXP_EMPTYMATCH_NOTAFTERMATCH); Count "$" reads "Count: 0 matches" (Count takes no empty match, EMPTYMATCH_NONE)
 
 <a id="view"></a>
 
@@ -6885,11 +6894,11 @@ The Run menu (Run… with Notepad++'s `$(…)` variables, Save Current Command�
 - Steps: Run `echo first-part; sleep 3; echo second-part`; immediately afterwards time a `get_document` call and poll the Console.
 - Expect: `run_command` and `get_document` each come back in under 1 s while the command runs; `first-part` is in the Console while `second-part` is not yet; `second-part` arrives within 10 s.
 
-#### RUN-014: A Run command is ended after 30 seconds, children included
+#### RUN-014: A Run command is not ended after 30 seconds, and a child left in the background does not hold it
 - Covers: IDM_EXECUTE
 - Channel: modal, ui
-- Steps: (slow, ~35 s) Run `sh -c 'sleep 60'; echo never-printed` and poll the Console for up to 45 s.
-- Expect: within 40 s the Console shows `(exit status 15, timed out)`; `never-printed` never appears; no `sleep 60` child of the app is left running (`pgrep -f 'sleep 60'` finds none started by the test).
+- Steps: (slow, ~35 s) Run `sleep 33; echo still-here` and poll the Console for up to 45 s; then Run `(sleep 3; echo late-line) & exit 4`.
+- Expect: `still-here` arrives (Command::run hands the program to ShellExecute, which sets no time limit) and the Console never says `timed out`; the second command's `(exit status 4)` comes at once, before `late-line` (its shell has ended; the child it left holds the output pipe), and `late-line` still reaches the Console afterwards.
 
 ### Saved commands
 
@@ -8487,6 +8496,148 @@ Every other area reads the application's state: text, selections, menus, control
 - Steps: For each of light and dark appearance: open `stations.ts` and `forecast.py`, caret at 12:5 and hidden; mask the title and the status bar's path; take the picture.
 - Expect: it matches `fixtures/golden/main-<appearance>.png`.
 
+<a id="a11y"></a>
+
+## A11Y — Accessibility: what VoiceOver is told, and the keyboard
+
+What an assistive application reads from NotepadMac and what it can do with it, checked by code:
+every element a user operates has a role and a name (a label, a title, or a label linked to it),
+the custom views (the tab bars, the dock strips, the Document Map, the status bar's path, Compare's
+bar) expose their parts with roles and names and act when pressed, the editor is a text area with
+its text and selection, and the dialogs can be worked from the keyboard (Tab order with full
+keyboard access, Escape, Return). The tree is read with `e2e_ax`, which asks the accessibility
+server about the app's own process (what VoiceOver gets; no Accessibility permission needed), and
+actions are performed the same way (`perform={"path", "action"}`). Out of scope, and left to a
+person with VoiceOver: how the announcements sound, their order and verbosity, rotor navigation,
+and whether a notification is spoken at the right moment. "Interactive" is a button, check box,
+radio button, pop-up, menu button, text field, text area, combo box, slider, incrementor, colour
+well, link or disclosure triangle, not a window's own buttons (close, minimise, zoom, full screen)
+and not a cell of a table (named by its row and column).
+
+### The main window
+
+#### A11Y-001: The main window has no element without a role or a name
+- Covers: IDM_FILE_NEW
+- Channel: ui, mcp
+- Steps: Open a document and run IDM_FILE_NEW; read the main window's tree.
+- Expect: the root is an AXWindow named "new 2"; no element has the role AXUnknown or none; every interactive element has a name.
+
+#### A11Y-002: The toolbar's buttons are named as their tooltips
+- Covers: -
+- Channel: ui
+- Steps: Read the main window's tree and the buttons of its AXToolbar.
+- Expect: at least 10 buttons; each has a name, the same text as its tooltip where it has one, and the AXPress action.
+
+#### A11Y-003: The tab bar is a tab group of the documents
+- Covers: -
+- Channel: ui, files
+- Steps: Open `one.txt` and `two.txt`, change the second; read the AXTabGroup named "Tab Bar".
+- Expect: its AXTabButton children end with "one.txt", "*two.txt" (a modified document marked with "*" as upstream's title bar marks it), values 0 and 1 (the one in front selected); each is an AXRadioButton with a frame, AXPress and AXShowMenu (the tab's right-click menu, there when the bar draws no close buttons).
+
+#### A11Y-004: Pressing a tab and its close button
+- Covers: -
+- Channel: ui
+- Steps: Pref `tabShowCloseButton` on; with `one.txt` and `two.txt` open (two in front), perform AXPress on the "one.txt" tab; then on the AXButton child of the "two.txt" tab; the pref off again.
+- Expect: "one.txt" comes to the front; the close button is named "Close"; pressing it closes "two.txt".
+
+#### A11Y-005: The editor is a text area with its text and selection
+- Covers: IDM_VIEW_CLONE_TO_ANOTHER_VIEW
+- Channel: ui, mcp
+- Steps: A document "alpha\nbeta\n" with "beta" selected; read the tree; clone it to the other view and read again.
+- Expect: SCI_GETACCESSIBILITY is SC_ACCESSIBILITY_ENABLED; one AXTextArea labelled with the document's name, its role description the system's (not Scintilla's English "source code editor"), value the text, 11 characters, selected range [6, 4], selected text "beta", insertion line 1; after the clone two text areas, both named after the document.
+
+#### A11Y-006: The status bar's path is a button that copies it
+- Covers: -
+- Channel: ui, clipboard
+- Steps: Open `status.txt`; find the AXButton over the status bar's path field; perform AXPress.
+- Expect: its label is the file's path, its help "Click to copy the full path"; a static text of the status bar holds "Ln"; the clipboard holds the path afterwards.
+
+### Panels
+
+#### A11Y-007: Docked panels are named groups with tabs and a close button
+- Covers: IDM_VIEW_DOC_MAP, IDM_VIEW_FUNC_LIST, IDM_VIEW_DOCLIST, IDM_VIEW_PROJECT_PANEL_1, IDM_EDIT_CHAR_PANEL, IDM_EDIT_CLIPBOARDHISTORY_PANEL
+- Channel: ui, menu
+- Steps: A Python document; show the Document Map, Function List, Document List, Project Panel 1, ASCII Codes Insertion, Clipboard History, Git, Markdown Preview and NppExec Console panels; read the tree.
+- Expect: no unknown role, no unnamed interactive element; at least two dock groups, each with named tab buttons, exactly one selected (the one the group is named after), and a "Close" button.
+
+#### A11Y-008: A dock's tab and its close button act when pressed
+- Covers: IDM_VIEW_FUNC_LIST, IDM_VIEW_DOC_MAP
+- Channel: ui
+- Steps: Show Function List and Document Map (one dock on the right); AXPress the "Function List" tab, then the dock's "Close".
+- Expect: Function List comes to the front of its dock, then is hidden; the Document Map stays shown.
+
+#### A11Y-009: The Document Map is a slider over the document
+- Covers: IDM_VIEW_DOC_MAP
+- Channel: ui
+- Steps: A 500-line document scrolled to the top; show the Document Map; read the tree; perform AXIncrement on the slider.
+- Expect: one AXSlider named "Document Map", value 0, with AXIncrement and AXDecrement; only one text area (the map's copy of the text is not another editor to VoiceOver); after the increment the editor's first visible line is past 0 and the slider's value above 0.
+
+#### A11Y-010: A floating panel is named too
+- Covers: IDM_VIEW_FUNC_LIST
+- Channel: ui
+- Steps: Show Function List and float it (`movePanel:to:` floating); read the floating window's tree; dock it back.
+- Expect: no unknown role, no unnamed interactive element; a group named "Function List".
+
+#### A11Y-011: Compare's bar buttons are named by their tooltips
+- Covers: -
+- Channel: ui, modal
+- Steps: Compare `a.txt` with `b.txt` (Compare with File…); read the tree; AXPress "Clear Active Compare".
+- Expect: buttons named "Previous Difference", "Next Difference", "Clear Active Compare" (the ◀ ▶ ✕ they show say nothing); no unnamed interactive element; pressing the last clears the comparison.
+
+### Dialogs and windows
+
+#### A11Y-012: Every control of a window has a role and a name
+- Covers: IDM_SEARCH_FIND, IDM_SEARCH_REPLACE, IDM_SEARCH_FINDINFILES, IDM_SEARCH_MARK, IDM_SEARCH_GOTOLINE, IDM_SEARCH_FINDCHARINRANGE, IDM_EDIT_COLUMNMODE, IDM_LANGSTYLE_CONFIG_DLG, IDM_SETTING_SHORTCUT_MAPPER, IDM_EXECUTE, IDM_ABOUT
+- Channel: ui, modal
+- Steps: For each of Find, Replace, Find in Files, Mark, Go To, Find characters in range, Column Editor, Style Configurator, Shortcut Mapper, Define your language, the SHA-256, SHA-256 from files, bcrypt and Argon2 windows, Base64, Password Generator, HTTP Request, Run, Execute NppExec Script, Conversion Panel, XPath, Windows, Debug Info and About: open it (modal ones for real), read its tree, close it.
+- Expect: the root is a named AXWindow; no unknown role; every interactive element has a name.
+
+#### A11Y-013: Every page of Preferences has its controls named
+- Covers: IDM_SETTING_PREFERENCE
+- Channel: ui
+- Steps: Open Preferences; select each page of the category list in turn and read the tree.
+- Expect: on no page an unknown role or an unnamed interactive element.
+
+#### A11Y-014: The Git panel and the Commit window
+- Covers: -
+- Channel: ui, files
+- Steps: A repository with a changed `a.txt`, opened; show the Git panel and read the main window; open Commit… and read it.
+- Expect: no unknown role and no unnamed interactive element in either.
+
+#### A11Y-015: The Remote Files window of FTP
+- Covers: -
+- Channel: ui, modal
+- Steps: The local FTP test server with `greeting.txt`; add the profile "local" and connect; read the Remote Files window.
+- Expect: no unknown role and no unnamed interactive element.
+
+### The keyboard
+
+#### A11Y-016: Every control is in the key view loop
+- Covers: -
+- Channel: ui, keys
+- Steps: For each of Find, Replace, Find in Files, Mark, Style Configurator, Shortcut Mapper, SHA-256, Base64, Password Generator, HTTP Request, Run: open it, press Tab once (AppKit works the loop out then), read the tree with the window's `nextKeyView` chain (`key_loop`) - what Tab walks with Keyboard navigation on (System Settings > Keyboard), a setting of the machine the suite leaves alone.
+- Expect: every enabled interactive control on screen is in the chain (itself, a view inside it, or the view it lies in), and none in it refuses the focus.
+
+#### A11Y-017: Escape closes a dialog
+- Covers: IDM_SEARCH_FIND, IDM_SEARCH_GOTOLINE, IDM_EDIT_COLUMNMODE, IDM_SETTING_PREFERENCE, IDM_LANGSTYLE_CONFIG_DLG, IDM_SETTING_SHORTCUT_MAPPER, IDM_EXECUTE, IDM_ABOUT
+- Channel: keys, modal
+- Steps: For each of Find, Go To, Column Editor, Preferences, Style Configurator, Shortcut Mapper, SHA-256, Base64, Password Generator, HTTP Request, Run, Windows, Debug Info and About: open it and press Escape in it.
+- Expect: the window closes within 3 s.
+
+#### A11Y-018: A dialog's default button is the one Return presses
+- Covers: IDM_SEARCH_GOTOLINE, IDM_EDIT_COLUMNMODE, IDM_EXECUTE
+- Channel: ui, modal
+- Steps: For Go To, Column Editor and Run: open it and read the window's AXDefaultButton.
+- Expect: "OK" in each (the prompt's first button, which Return presses); Escape is A11Y-017's.
+
+### In another language
+
+#### A11Y-019: The names the port gives are in the interface language
+- Covers: IDM_VIEW_DOC_MAP
+- Channel: launch, ui
+- Steps: Start with `-NppMac.localizationFile russian.xml`; a 200-line document; show the Document Map; pref `tabShowCloseButton` on; read the tree.
+- Expect: the tab group is named "Панель Вкладок" (russian.xml's Tabbar title), every tab's close button "Закрыть", the map's slider "Карта Документа"; no unnamed interactive element.
+
 ## Appendix: menu command coverage
 
 | Menu | Command | Id | Cases |
@@ -8783,8 +8934,8 @@ Every other area reads the application's state: text, selections, menus, control
 | Edit | Skip Current  Go to Next Multi-select | `IDM_EDIT_MULTISELECTSSKIP` | EDIT-092, L10N-002 |
 | Edit | Column Mode... | `IDM_EDIT_COLUMNMODETIP` | EDIT-094, L10N-002 |
 | Edit | Column Editor... | `IDM_EDIT_COLUMNMODE` | EDIT-095, EDIT-096, EDIT-097, EDIT-098, EDIT-099, EDIT-104 |
-| Edit | Character Panel | `IDM_EDIT_CHAR_PANEL` | EDIT-100, EDIT-101, L10N-002 |
-| Edit | Clipboard History | `IDM_EDIT_CLIPBOARDHISTORY_PANEL` | EDIT-102, L10N-002 |
+| Edit | Character Panel | `IDM_EDIT_CHAR_PANEL` | EDIT-100, EDIT-101, L10N-002, A11Y-007 |
+| Edit | Clipboard History | `IDM_EDIT_CLIPBOARDHISTORY_PANEL` | EDIT-102, L10N-002, A11Y-007 |
 | Edit | Read-Only in Notepad++ › Read-Only on Current Document | `IDM_EDIT_TOGGLEREADONLY` | EDIT-010, EDIT-015, EDIT-103, EDIT-104, EDIT-107, TYPING-008 |
 | Edit | Read-Only in Notepad++ › Read-Only for All Documents | `IDM_EDIT_SETREADONLYFORALLDOCS` | EDIT-105, L10N-002 |
 | Edit | Read-Only in Notepad++ › Clear Read-Only for All Documents | `IDM_EDIT_CLEARREADONLYFORALLDOCS` | EDIT-105, L10N-002 |
@@ -8859,7 +9010,7 @@ Every other area reads the application's state: text, selections, menus, control
 | View | Unfold Level › 7 | `IDM_VIEW_UNFOLD_7` | VIEW-001, VIEW-039, L10N-002 |
 | View | Unfold Level › 8 | `IDM_VIEW_UNFOLD_8` | VIEW-001, VIEW-039, VIEW-040, L10N-002 |
 | View | Summary... | `IDM_VIEW_SUMMARY` | VIEW-001, VIEW-046, VIEW-047, VIEW-048, VIEW-049, L10N-002 |
-| View | Project Panels › Project Panel 1 | `IDM_VIEW_PROJECT_PANEL_1` | VIEW-001, VIEW-004, VIEW-064, UI-049, L10N-002 |
+| View | Project Panels › Project Panel 1 | `IDM_VIEW_PROJECT_PANEL_1` | VIEW-001, VIEW-004, VIEW-064, UI-049, L10N-002, A11Y-007 |
 | View | Project Panels › Project Panel 2 | `IDM_VIEW_PROJECT_PANEL_2` | VIEW-001, VIEW-004, VIEW-064, L10N-002 |
 | View | Project Panels › Project Panel 3 | `IDM_VIEW_PROJECT_PANEL_3` | VIEW-001, VIEW-004, VIEW-064, L10N-002 |
 | View | Folder as Workspace | `IDM_VIEW_FILEBROWSER` | VIEW-001, VIEW-004, VIEW-057, VIEW-058, VIEW-065, UI-049 |
@@ -9052,7 +9203,7 @@ Every other area reads the application's state: text, selections, menus, control
 | ? | Update Notepad++ | `IDM_UPDATE_NPP` | WINDOW-016, WINDOW-017, WINDOW-018, WINDOW-019 |
 | ? | Set Updater Proxy... | `IDM_CONFUPDATERPROXY` | WINDOW-015 |
 | ? | Debug Info... | `IDM_DEBUGINFO` | WINDOW-012 |
-| ? | About Notepad++ | `IDM_ABOUT` | UI-065, WINDOW-010, WINDOW-011, VISUAL-013 |
+| ? | About Notepad++ | `IDM_ABOUT` | UI-065, WINDOW-010, WINDOW-011, VISUAL-013, A11Y-012, A11Y-017 |
 | Settings | Preferences... | `IDM_SETTING_PREFERENCE` | UI-065, L10N-004, L10N-005, L10N-006, L10N-015, L10N-016 |
 | Settings | Style Configurator... | `IDM_LANGSTYLE_CONFIG_DLG` | UI-065, L10N-015, SETTINGS-092, SETTINGS-093, SETTINGS-094, SETTINGS-095 |
 | Settings | Shortcut Mapper... | `IDM_SETTING_SHORTCUT_MAPPER` | UI-065, L10N-015, SETTINGS-082, SETTINGS-099, SETTINGS-100, SETTINGS-101 |

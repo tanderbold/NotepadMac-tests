@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 ORDER = ["FILE", "SESSION", "EDIT", "TYPING", "MACRO", "SEARCH", "VIEW", "UI", "L10N", "ENCODING", "LANG",
-         "SETTINGS", "TOOLS", "PLUGINS", "MACEXTRA", "COMPARE", "FTP", "RUN", "GIT", "AGENT", "CLI", "WINDOW", "HELP", "VISUAL"]
+         "SETTINGS", "TOOLS", "PLUGINS", "MACEXTRA", "COMPARE", "FTP", "RUN", "GIT", "AGENT", "CLI", "WINDOW", "HELP", "VISUAL", "A11Y"]
 CASE = re.compile(r"^### ([A-Z0-9]+)-(\d{3}): (.+?)\s*$")
 FIELD = re.compile(r"^- (Covers|Channel|Steps|Expect): (.*)$")
 

@@ -951,3 +951,11 @@ Everything under the Search menu (66 commands in `plan/commands.tsv`) and the Fi
 - Channel: menu
 - Steps: e2e_menu for every Search command id of plan/commands.tsv; e2e_menu tree "Search" depth 3.
 - Expect: every id resolves to an enabled item whose title matches commands.tsv (with "…" for "..."), under the submenus Style All Occurrences of Token, Style One Token, Clear Style, Jump Up, Jump Down, Copy Styled Text, Bookmark, Change History; IDM_SEARCH_CLEAR_BOOKMARKS must be among them (see SEARCH-127)
+
+## Line ends in regular expressions
+
+### SEARCH-154: '^', '$', \s+$ and \R on CRLF text replace as Boost does
+- Covers: IDM_SEARCH_REPLACE, IDM_SEARCH_FIND
+- Channel: ui
+- Steps: Regular expression mode. Replace All "$" → ";" in "a\r\nb\r\n"; "^" → ">" in "a\r\nb\r\n"; "\s+$" → "" in "a \r\nb\t\r\nc"; "\R" → "|" in "a\r\nb\nc\rd"; "a*" → "-" in "baac"; then Count "$" in "ab\r\ncd\r\n".
+- Expect: "a;\r\nb;\r\n;", ">a\r\n>b\r\n>", "a\r\nb\r\nc", "a|b|c|d", "-b-c-" (Boost's '^' and '$' never stand between CR and LF, '^' also starts the empty last line, and Replace All takes no empty match right after the previous match: SCFIND_REGEXP_EMPTYMATCH_NOTAFTERMATCH); Count "$" reads "Count: 0 matches" (Count takes no empty match, EMPTYMATCH_NONE)

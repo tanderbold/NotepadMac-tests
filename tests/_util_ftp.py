@@ -5,6 +5,7 @@ import shutil
 import socket
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -101,7 +102,17 @@ class Ftp:
             self.app.call("run_command", timeout=timeout, command=CONNECT)
         else:
             self.run(CONNECT)
-        return self.app.modal_log()
+        # The connection is tried off the main thread: it has ended when the panel
+        # shows or "Cannot connect." is said (a profile not found asks nothing more).
+        log = self.app.modal_log()
+        if any(e["message"].startswith("Connect to which?") for e in log) and \
+                any(p.get("name") == name for p in (self.app.pref("ftpProfiles") or [])):
+            end = time.monotonic() + (timeout or 30)
+            while time.monotonic() < end and not self.panel() and \
+                    not any(e["message"] == "Cannot connect." for e in log):
+                time.sleep(0.1)
+                log += self.app.modal_log()
+        return log
 
     def panel(self):
         for w in self.app.windows():
@@ -150,7 +161,13 @@ class Ftp:
     def upload(self, answer=1):
         self.app.answers(alerts=[answer])
         self.run(UPLOAD)
-        return self.app.modal_log()
+        # Sent off the main thread; the alert that says how it went follows.
+        log = self.app.modal_log()
+        end = time.monotonic() + 30
+        while time.monotonic() < end and not any(e["message"] == "FTP" for e in log):
+            time.sleep(0.1)
+            log += self.app.modal_log()
+        return log
 
     def cleanup(self):
         try:

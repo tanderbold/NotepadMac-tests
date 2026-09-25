@@ -282,23 +282,24 @@ def test_run_013_a_command_runs_in_the_background_and_its_output_streams(app):
 
 @pytest.mark.slow
 @pytest.mark.case("RUN-014")
-def test_run_014_a_run_command_is_ended_after_30_seconds_children_included(app):
-    """RUN-014: A Run command is ended after 30 seconds, children included
+def test_run_014_a_run_command_is_not_ended_after_30_seconds(app):
+    """RUN-014: A Run command is not ended after 30 seconds, and a child left in the background does not hold it
 
     Covers: IDM_EXECUTE
     Channel: modal, ui
-    Steps: (slow, ~35 s) Run `sh -c 'sleep 60'; echo never-printed` and poll the Console for up to 45 s.
-    Expect: within 40 s the Console shows `(exit status 15, timed out)`; `never-printed` never appears; no `sleep 60` child of the app is left running (`pgrep -f 'sleep 60'` finds none started by the test).
+    Steps: (slow, ~35 s) Run `sleep 33; echo still-here` and poll the Console for up to 45 s; then Run `(sleep 3; echo late-line) & exit 4`.
+    Expect: `still-here` arrives (Command::run hands the program to ShellExecute, which sets no time limit) and the Console never says `timed out`; the second command's `(exit status 4)` comes at once, before `late-line` (its shell has ended; the child it left holds the output pipe), and `late-line` still reaches the Console afterwards.
     """
     app.new("x")
     m = Mark(app)
-    run_prompt(app, "sh -c 'sleep 61'; echo never-printed")
-    m.wait("(exit status 15, timed out)\n", 45)
-    app.idle(0.5)
-    # The Console echoes the command line itself ("> sh -c ...; echo never-printed"): what must not
-    # appear is the echo's output, a line of its own.
-    assert "never-printed" not in m.text().splitlines()
-    assert sleep_children_of(app.proc.pid, "sleep 61") == []
+    run_prompt(app, "sleep 33; echo still-here")
+    m.wait("still-here\n", 45)
+    assert "timed out" not in m.text()
+    m2 = Mark(app)
+    run_prompt(app, "(sleep 3; echo late-line) & exit 4")
+    m2.wait("(exit status 4)\n", 10)
+    assert "late-line" not in m2.text().splitlines()   # the echoed command line has the words too
+    m2.wait("late-line\n", 10)
 
 
 @pytest.mark.case("RUN-015")

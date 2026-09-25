@@ -250,13 +250,13 @@ marked xfail with the defect in its reason and reported as an issue in the Notep
 - Covers: IDM_EDIT_SPLIT_LINES
 - Channel: mcp, prefs
 - Steps: Set edgeMode=1 and edgeColumns="8" (applied); new document "aaa bbb ccc ddd eee fff\nshort\n"; select all; run the command; restore the preferences.
-- Expect: "aaa bbb\nccc ddd\neee fff\nshort\n"; no produced line is longer than 8 characters; the short line is untouched.
+- Expect: "aaa bbb \nccc ddd \neee fff\nshort\n" (SCI_LINESSPLIT at the width of 9 "P"s, as upstream: the line breaks after the space, which stays on the line above); the short line is untouched.
 
 ### EDIT-038: Join Lines joins with single spaces
 - Covers: IDM_EDIT_JOIN_LINES
 - Channel: mcp
-- Steps: New document "a\nb\nc"; select from 1:1 to 2:2 and run the command; then with no selection on "a\nb\nc\n"; then on a one-line document "x\n".
-- Expect: "a b\nc"; "a b c\n" (the last line ending is kept); "x\n" unchanged.
+- Steps: New document "a\nb\nc"; select from 1:1 to 2:2 and run the command; then select all of "a\nb\nc\n" and run it; then run it with only a caret on "a\nb\nc\n"; then on a one-line document "x\n".
+- Expect: "a b\nc"; "a b c\n" (the last line ending is kept); with only a caret nothing changes (upstream joins the selected lines only: a one-line range does nothing); "x\n" unchanged.
 
 ### EDIT-039: Move Up and Move Down Current Line
 - Covers: IDM_EDIT_LINE_UP, IDM_EDIT_LINE_DOWN

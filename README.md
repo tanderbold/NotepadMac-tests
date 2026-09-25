@@ -50,6 +50,14 @@ are working at**. Use a spare Mac, a CI runner, or a macOS virtual machine:
 The checkout of NotepadMac is looked for beside this one (`../npp`) unless `NPPMAC_E2E_APP`
 names a build.
 
+`tests/test_perf.py` (the "perf" area, every test marked `slow`) measures large inputs - 10 MB,
+100 MB and 1 GB files, a 5 MB line, 100 tabs and a session of 100, Find All, Replace All,
+Find in Files over 20,000 files, Compare, the Document Map, the Function List, a keystroke's
+latency - with limits several times what a run measures, to catch a pathological regression.
+It makes its inputs as it goes (up to about 1.5 GB in the temporary folder, 4 GB of memory for
+the application at the peak) and takes about 20 minutes; `-s` prints the numbers, which are also
+appended to `.work/<worker>/perf.jsonl`.
+
 ## Layout
 
 | Path | What |

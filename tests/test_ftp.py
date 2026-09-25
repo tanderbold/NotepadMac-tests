@@ -303,14 +303,20 @@ def test_ftp_015_sftp_to_a_non_ssh_port_fails_with_an_alert(app, ftp):
     ftp.add("ssh", protocol="sftp", password="")
     app.answers(alerts=[{"button": 1, "field": "ssh"}])
     pending = app.call_async("run_command", command=CONNECT)
+    # The connection is tried off the main thread: the command comes back at once
+    # and the alert follows when the transfer gives up.
+    log = []
     t = time.monotonic()
-    while not pending.done and time.monotonic() - t < 30:
+    while time.monotonic() - t < 30:
+        log += app.modal_log()
+        if pending.done and any(e["message"] == "Cannot connect." for e in log):
+            break
         time.sleep(0.2)
-    hung = not pending.done
+    hung = not any(e["message"] == "Cannot connect." for e in log)
     if hung:
         ftp.kill()   # sftp then sees end of file and the application comes back
         pending.wait(60)
-    log = app.modal_log()
+        log += app.modal_log()
     assert any(e["message"] == "Cannot connect." for e in log), log
     assert not any("assword" in e.get("message", "") for e in log[1:])
     assert not remote_windows(app)
@@ -397,7 +403,13 @@ def test_ftp_019_losing_the_server_while_browsing_shows_the_transfer_error(app, 
     ftp.kill()
     app.answers(alerts=[1])
     ftp.run(BROWSE)
-    log = [e for e in app.modal_log() if e["message"] == "FTP"]
+    # The listing is tried off the main thread; the alert follows its failure.
+    log = []
+    try:
+        app.wait(lambda: log.extend(e for e in app.modal_log() if e["message"] == "FTP") or log, 20,
+                 message="the FTP alert")
+    except TimeoutError:
+        pass
     assert log, "no FTP alert"
     assert log[0]["buttons"] == ["OK", "Copy"]
     assert log[0]["informative"].strip()
@@ -518,7 +530,10 @@ def test_ftp_024_a_file_that_vanished_from_the_server_reports_an_error_and_op(ap
     app.answers(alerts=[1])
     opened = ftp.activate_name("gone.txt")
     assert not opened
-    alerts = [e for e in app.modal_log() if e["message"] == "FTP"]
+    # The download is tried off the main thread; the alert follows its failure.
+    alerts = []
+    app.wait(lambda: alerts.extend(e for e in app.modal_log() if e["message"] == "FTP") or alerts, 20,
+             message="the FTP alert")
     assert alerts and alerts[0]["informative"].strip()
     after = app.docs()
     assert len(after) == len(before)

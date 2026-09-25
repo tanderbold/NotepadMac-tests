@@ -98,6 +98,19 @@ Several suites can run at once with different `NPPMAC_E2E_WORKER` values.
    - `e2e_act` also selects NSMatrix rows (radio groups) and sets NSColorWell
      colours (`set_value "#RRGGBB"`);
    - `e2e_idle` – let the run loop turn (timers, delayed refreshes).
+   - `e2e_ax` – a window's accessibility tree as VoiceOver reads it: the
+     accessibility server's own answers (AXUIElement on the app's own process, which
+     needs no Accessibility permission), per element `role`, `subrole`, `label`,
+     `title`, `name` (label, title or linked title element), `value`, `enabled`,
+     `actions`, `frame`, text attributes (`number_of_characters`, `selected_range`...),
+     and the view under it (`view_class`, `view_path`, `tooltip`); windows add
+     `default_button` / `cancel_button`; `focus` is the first responder's view (class,
+     path; a field being edited, not the field editor) and `full_keyboard_access` whether
+     Tab goes to every control; `key_loop=True` adds the window's `nextKeyView` chain (what
+     Tab walks with Keyboard navigation on; `refuses` marks a control that refuses the focus);
+     `perform={"path", "action"}`
+     performs an accessibility action (AXPress, AXIncrement...) on an element.
+     Only windows on screen have elements.
 
    While an alert or modal window is up, requests are still served (they run
    in the run loop's common modes), so `real_modals=True` + `call_async` +

@@ -648,7 +648,9 @@ def test_edit_037_split_lines_breaks_long_lines_at_the_edge_column(app):
         new(app, "aaa bbb ccc ddd eee fff\nshort\n")
         select_all(app)
         app.run("IDM_EDIT_SPLIT_LINES")
-        assert app.text() == "aaa bbb\nccc ddd\neee fff\nshort\n"
+        # Upstream's SCI_LINESSPLIT breaks where wrapping would, after the space,
+        # which stays at the end of the line above
+        assert app.text() == "aaa bbb \nccc ddd \neee fff\nshort\n"
 
 
 @pytest.mark.case("EDIT-038")
@@ -659,8 +661,13 @@ def test_edit_038_join_lines_joins_with_single_spaces(app):
     app.run("IDM_EDIT_JOIN_LINES")
     assert app.text() == "a b\nc"
     new(app, "a\nb\nc\n")
+    select_all(app)
     app.run("IDM_EDIT_JOIN_LINES")
     assert app.text() == "a b c\n"
+    # NppCommands.cpp IDM_EDIT_JOIN_LINES: only a caret (a one-line range) joins nothing
+    new(app, "a\nb\nc\n")
+    app.run("IDM_EDIT_JOIN_LINES")
+    assert app.text() == "a\nb\nc\n"
     new(app, "x\n")
     app.run("IDM_EDIT_JOIN_LINES")
     assert app.text() == "x\n"

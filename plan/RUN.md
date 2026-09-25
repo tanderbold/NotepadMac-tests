@@ -82,11 +82,11 @@ The Run menu (Run… with Notepad++'s `$(…)` variables, Save Current Command�
 - Steps: Run `echo first-part; sleep 3; echo second-part`; immediately afterwards time a `get_document` call and poll the Console.
 - Expect: `run_command` and `get_document` each come back in under 1 s while the command runs; `first-part` is in the Console while `second-part` is not yet; `second-part` arrives within 10 s.
 
-### RUN-014: A Run command is ended after 30 seconds, children included
+### RUN-014: A Run command is not ended after 30 seconds, and a child left in the background does not hold it
 - Covers: IDM_EXECUTE
 - Channel: modal, ui
-- Steps: (slow, ~35 s) Run `sh -c 'sleep 60'; echo never-printed` and poll the Console for up to 45 s.
-- Expect: within 40 s the Console shows `(exit status 15, timed out)`; `never-printed` never appears; no `sleep 60` child of the app is left running (`pgrep -f 'sleep 60'` finds none started by the test).
+- Steps: (slow, ~35 s) Run `sleep 33; echo still-here` and poll the Console for up to 45 s; then Run `(sleep 3; echo late-line) & exit 4`.
+- Expect: `still-here` arrives (Command::run hands the program to ShellExecute, which sets no time limit) and the Console never says `timed out`; the second command's `(exit status 4)` comes at once, before `late-line` (its shell has ended; the child it left holds the output pipe), and `late-line` still reaches the Console afterwards.
 
 ## Saved commands
 
