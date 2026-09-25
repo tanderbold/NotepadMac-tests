@@ -244,6 +244,17 @@ TOKEN_TABLE = [
 @pytest.mark.case("LANG-005")
 def test_lang_005_keywords_comments_strings_and_numbers_get_their_own_styles_p(app):
     """LANG-005: Keywords, comments, strings and numbers get their own styles per language"""
+    # The names are the theme's (Style Configurator's): the table is DarkModeDefault's, which names
+    # some styles otherwise than the light Default ("WORD"/"KEYWORDS", "XMLSTART"/"XML START").
+    before = app.prefs("appearanceMode", "darkThemeName")
+    app.set_prefs(appearanceMode=2, darkThemeName="DarkModeDefault")
+    try:
+        _lang_005_tokens(app)
+    finally:
+        app.set_prefs(**{k: v for k, v in before.items()})
+
+
+def _lang_005_tokens(app):
     wrong = []
     for lang, text, want in TOKEN_TABLE:
         new_in(app, text, lang)

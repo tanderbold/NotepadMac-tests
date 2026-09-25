@@ -177,6 +177,11 @@ class App:
         """Empties the test bundle's preference domain, then writes initial values."""
         subprocess.run(["defaults", "delete", self.bundle_id], capture_output=True)
         values = {"autoUpdateMode": 0}
+        # NPPMAC_E2E_APPEARANCE=light|dark: Preferences > Dark Mode set to Light or Dark rather than
+        # following the machine (CI runners are light, a VM may be dark) - to reproduce one on the other.
+        appearance = os.environ.get("NPPMAC_E2E_APPEARANCE", "").lower()
+        if appearance in ("light", "dark"):
+            values["appearanceMode"] = 1 if appearance == "light" else 2
         values.update(initial or {})
         for key, value in values.items():
             self.write_default(key, value)
