@@ -24,7 +24,7 @@ Rules:
 - IDs are the area code plus a three-digit number, unique, in order
   (`EDIT-001`, `EDIT-002`...). Area codes: FILE, SESSION, EDIT, TYPING, MACRO,
   SEARCH, VIEW, UI, L10N, ENCODING, LANG, SETTINGS, TOOLS, PLUGINS, COMPARE,
-  FTP, RUN, GIT, AGENT, CLI, MACEXTRA, WINDOW, HELP.
+  FTP, RUN, GIT, AGENT, CLI, MACEXTRA, WINDOW, HELP, VISUAL.
 - One case = one pytest test. A case may be parametrized (say so in Steps:
   "for each of ..."), which is how families like the 194 language commands or
   the 50 encodings are covered without 194 cases.

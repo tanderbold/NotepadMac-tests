@@ -29,7 +29,8 @@ How the tests drive the application: `HARNESS.md`.
 | [AGENT — The MCP interface (the product's agent server)](#agent) | 105 |
 | [CLI — The nppmac tool and the application's command-line switches](#cli) | 31 |
 | [WINDOW — Window menu, the "▼" and "(root)" entries, and the Help ("?") menu](#window) | 19 |
-| **Total** | **1282** |
+| [VISUAL — What the window shows, in pixels](#visual) | 14 |
+| **Total** | **1296** |
 
 Menu commands covered: 579 of 579.
 
@@ -1624,8 +1625,8 @@ highlighting is indicator 12, tag matching 15, tag attributes 16.
 #### TYPING-045: Shift with the movement keys extends the selection
 - Covers: -
 - Channel: keys, mcp
-- Steps: "hello world\nnext"; caret at 1:1; Shift+Alt+Right; Shift+Cmd+Right; Shift+Down; Shift+Cmd+Up.
-- Expect: selection "hello " (a word move stops at the start of the next word); "hello world"; "hello world\nnext"; then the caret back at 1:1 with nothing selected.
+- Steps: "hello world\nnext"; caret at 1:1; Shift+Right five times; Shift+Cmd+Right; Shift+Down; Shift+Cmd+Up.
+- Expect: selection "hello"; "hello world"; "hello world\nnext"; then the caret back at 1:1 with nothing selected.
 
 #### TYPING-046: Cmd+D duplicates the line and keeps the caret column
 - Covers: IDM_EDIT_DUP_LINE
@@ -1638,7 +1639,7 @@ highlighting is indicator 12, tag matching 15, tag attributes 16.
 #### TYPING-047: Zoom keys
 - Covers: -
 - Channel: keys
-- Steps: New document; read SCI_GETZOOM; press Cmd+=; Cmd+- twice; Cmd+0; press Cmd+= 40 times.
+- Steps: New document; read SCI_GETZOOM; press Cmd++ (Zoom In; Cmd+= is Edit > Calculate); Cmd+- twice; Cmd+0; press Cmd++ 40 times.
 - Expect: 0; 1; -1; 0; the zoom stops growing at Scintilla's limit (it never exceeds the maximum and the app stays responsive); the text is never changed by zooming.
 
 #### TYPING-048: Overtype replaces characters instead of inserting
@@ -1699,7 +1700,7 @@ recorded only as the Scintilla messages it happens to send. The home folder is
 - Covers: IDM_MACRO_PLAYBACKRECORDEDMACRO, IDM_MACRO_RUNMULTIMACRODLG
 - Channel: mcp, modal
 - Steps: Start the app fresh (fresh_app); new document "q"; run Playback; run Run Multiple Times with a queued {1, "3"}.
-- Expect: the text stays "q"; no error.
+- Expect: the text stays "q"; no error. Both commands are disabled with nothing recorded (Notepad_plus::checkMacroState), so run_command reports them not run and no dialog comes up.
 
 #### MACRO-007: The Macro menu follows the recording state
 - Covers: IDM_MACRO_STARTRECORDINGMACRO, IDM_MACRO_STOPRECORDINGMACRO, IDM_MACRO_PLAYBACKRECORDEDMACRO, IDM_MACRO_SAVECURRENTMACRO
@@ -1869,7 +1870,7 @@ Everything under the Search menu (66 commands in `plan/commands.tsv`) and the Fi
 - Covers: IDM_SEARCH_FIND
 - Channel: ui, mcp
 - Steps: Document "x x x\n", caret at 0; Find what "x", Normal; press Find Next three times, then a fourth time.
-- Expect: selections are 0-1, 2-3, 4-5, then 0-1 again (wrap on); the status line is empty after each successful press
+- Expect: selections are 0-1, 2-3, 4-5, then 0-1 again (wrap on); the status line is empty after the first three presses and, after the fourth, reads "Find: Reached document end, first occurrence from the top found." (SEARCH-016)
 
 #### SEARCH-014: Find Next without a match reports it and leaves the selection
 - Covers: IDM_SEARCH_FIND
@@ -2015,7 +2016,7 @@ Everything under the Search menu (66 commands in `plan/commands.tsv`) and the Fi
 - Covers: IDM_SEARCH_FIND
 - Channel: ui, mcp
 - Steps: Open three documents: "zqx first\nzqx again zqx\n", "second zqx\n", "nothing\n" (plus the initial empty new 1); make the second one current; press Find All in All Opened Documents for "zqx".
-- Expect: the results text starts `Search "zqx" (4 hits in 2 files of 4 searched)`; it contains "(3 hits)\n\tLine 1: zqx first\n\tLine 2: zqx again zqx\n" under the first document's title and "(1 hit)" under the second's; the dialog status (if kept open) reads "4 found in all opened documents"; closing the results tab brings back the second document as it was
+- Expect: the results text starts `Search "zqx" (4 hits in 2 files of 4 searched)`; it contains "(3 hits)\n\tLine 1: zqx first\n\tLine 2: zqx again zqx\n" under the first document's title and "(1 hit)" under the second's; the dialog status (if kept open) reads "4 found in all opened documents"; the searched documents are unchanged (the results tab is a tab here, so which tab is in front after closing it is not part of the case)
 
 #### SEARCH-038: Find All in All Opened Documents ignores In selection and the results tab itself
 - Covers: IDM_SEARCH_FIND
@@ -2441,9 +2442,9 @@ Everything under the Search menu (66 commands in `plan/commands.tsv`) and the Fi
 
 #### SEARCH-106: Mark... marks every whole-word occurrence with the Find Mark style
 - Covers: IDM_SEARCH_MARK
-- Channel: menu, modal, mcp
-- Steps: Document "foo bar foo foobar Foo\n"; queue alert {button 1, field "foo"}; run IDM_SEARCH_MARK; read indicator 13.
-- Expect: the prompt "Mark" was shown; indicator 13 covers 0-3, 8-11 and 19-22 (whole word, any case, per markAllWordOnly true / markAllCaseSensitive false) but not "foobar"; the first "foo" is selected
+- Channel: menu, ui, mcp
+- Steps: Document "foo bar foo foobar Foo\n"; run IDM_SEARCH_MARK (it opens the Find dialog on its Mark tab, as upstream's MARK_DLG); Find what "foo", Match whole word only on, Match case off, Purge on; press Mark All; read indicator 13.
+- Expect: indicator 13 covers 0-3, 8-11 and 19-22 (whole word, any case) but not "foobar".
 
 #### SEARCH-107: Mark... with a term that is not in the document marks nothing
 - Covers: IDM_SEARCH_MARK
@@ -2627,7 +2628,7 @@ Everything under the Search menu (66 commands in `plan/commands.tsv`) and the Fi
 - Covers: IDM_SEARCH_GOTOLINE
 - Channel: menu, modal, mcp
 - Steps: CRLF file "ab\r\ncd\r\n": go to "@3" (between \r and \n); document "é!" : go to "@1" (inside é).
-- Expect: first caret at 2 (end of line 1, before \r); second caret at 0 (never inside the é)
+- Expect: first caret at 4 (after the \r\n: GoToLineDlg snaps with POSITIONAFTER(POSITIONBEFORE(offset))); second caret at 2 (after the é, never inside it)
 
 #### SEARCH-137: A line past the end goes to the last line
 - Covers: IDM_SEARCH_GOTOLINE
@@ -2638,8 +2639,8 @@ Everything under the Search menu (66 commands in `plan/commands.tsv`) and the Fi
 #### SEARCH-138: Go to... refuses nonsense and can be cancelled
 - Covers: IDM_SEARCH_GOTOLINE
 - Channel: menu, modal, mcp
-- Steps: Caret at 2:3; answers in turn: 2 (Cancel), {1, ""}, {1, "abc"}, {1, "0"}, {1, "@-1"}, {1, "@9999"}.
-- Expect: the caret stays at 2:3 after each; no text changes
+- Steps: Caret at 2:3; answers in turn: 2 (Cancel), {1, ""}, {1, "abc"}, {1, "0"}, {1, "@-1"}; then {1, "@9999"}.
+- Expect: the caret stays at 2:3 after each; no text changes; "@9999" is clamped to the end (GoToLineDlg: POSITIONBEFORE/POSITIONAFTER clamp), so the caret goes to the end of the text
 
 ### Braces
 
@@ -2997,7 +2998,7 @@ Scintilla state is read with `e2e_sci` on `main` or `sub`; menu state with `e2e_
 - Covers: IDM_VIEW_UNFOLD_1, IDM_VIEW_UNFOLD_2, IDM_VIEW_UNFOLD_3, IDM_VIEW_UNFOLD_4, IDM_VIEW_UNFOLD_5, IDM_VIEW_UNFOLD_6, IDM_VIEW_UNFOLD_7, IDM_VIEW_UNFOLD_8
 - Channel: mcp
 - Steps: For each N in 1..8: the 8-deep document; run IDM_VIEW_FOLDALL (which contracts every header), then IDM_VIEW_UNFOLD_N; read SCI_GETFOLDEXPANDED of every header.
-- Expect: only the header of depth N-1 is expanded, all others still contracted.
+- Expect: the headers of depth 0..N-1 are expanded (the level-N header is opened, and Scintilla shows its hidden parents first, as upstream), the deeper ones still contracted.
 
 #### VIEW-040: Fold levels deeper than the document change nothing
 - Covers: IDM_VIEW_FOLD_5, IDM_VIEW_FOLD_8, IDM_VIEW_UNFOLD_5, IDM_VIEW_UNFOLD_8
@@ -3125,7 +3126,7 @@ Scintilla state is read with `e2e_sci` on `main` or `sub`; menu state with `e2e_
 - Covers: IDM_VIEW_DOC_MAP
 - Channel: mcp, ui, snapshot
 - Steps: Open a 200-line C file; run IDM_VIEW_DOC_MAP; read `isPanelVisible:`/`placeOfPanel: documentMap` (NppDockingManager) and the map's text through `e2e_sci view=map` (hook); snapshot; run it again.
-- Expect: visible, place 1 (right); the map holds the same text as the editor and is read-only; the snapshot shows the map column right of the editor; the second run hides it.
+- Expect: visible, place 1 (right); the map holds the same text as the editor - it is a view on the editor's own document (read-only is the document's, not the map's); the snapshot shows the map column right of the editor; the second run hides it.
 
 #### VIEW-060: Document Map follows the tab in front
 - Covers: IDM_VIEW_DOC_MAP, IDM_VIEW_TAB_NEXT
@@ -3137,7 +3138,7 @@ Scintilla state is read with `e2e_sci` on `main` or `sub`; menu state with `e2e_
 - Covers: IDM_VIEW_DOC_MAP
 - Channel: ui, mcp
 - Steps: A 3000-line document, first visible line 0; show the map; `e2e_act click` on the map's zone view (class NppMapZoneView, clicked in its middle).
-- Expect: the editor's first visible line moves well down (between 1000 and 2000); the caret line is unchanged.
+- Expect: the map line under the click (its first visible line plus half its lines on screen) comes into the editor's view (DocumentMap::scrollMap: the map shows its own window on a long text, not the whole of it); the caret line is unchanged.
 
 #### VIEW-062: Document List lists the open documents and switches to one
 - Covers: IDM_VIEW_DOCLIST
@@ -3148,7 +3149,7 @@ Scintilla state is read with `e2e_sci` on `main` or `sub`; menu state with `e2e_
 #### VIEW-063: Function List lists the functions and jumps to one
 - Covers: IDM_VIEW_FUNC_LIST
 - Channel: ui, mcp
-- Steps: Open `m.py` = "def alpha():\n    pass\n\nclass Beta:\n    def gamma(self):\n        pass\n"; run IDM_VIEW_FUNC_LIST; read the table cells; `e2e_act double_click` the row of gamma; type "def delta():\n    pass\n" at the end and let the run loop turn; switch to a plain-text tab.
+- Steps: Open `m.py` = "def alpha():\n    pass\n\nclass Beta:\n    def gamma(self):\n        pass\n"; run IDM_VIEW_FUNC_LIST; read the table cells; `e2e_act double_click` the row of gamma; type "def delta():\n    pass\n" at the end and save (upstream parses the list again on save and activation, not while typing); switch to a plain-text tab.
 - Expect: rows "alpha()  (line 1)", "Beta  (line 4)", "Beta::gamma(self)  (line 5)"; the double click puts the caret on line 5; after the edit a delta row appears; for the plain-text tab the list is empty; the panel is on the right.
 
 #### VIEW-064: Project Panels 1, 2 and 3 show and hide on their own
@@ -3557,7 +3558,7 @@ view: its items are read with `e2e_invoke editor key=tabBar.items.title` (and `.
 - Covers: IDM_EDIT_SELECTALL
 - Channel: ui, mcp
 - Steps: Document "héllo\nwörld\n"; select from line 1 col 2 to line 2 col 3; read; select all; read; make a two-caret multi-selection of 3 characters each (SCI_SETSELECTION/SCI_ADDSELECTION); read; make a 2x3 rectangular selection; read.
-- Expect: "Sel: 7 | 2" (characters, not bytes); select all "Sel: 12 | 3"; multi-selection "Sel 2 : 6 | 2"; rectangular "Sel 2 : 6 | 2"; the Pos field is replaced by the Sel field while there is a selection.
+- Expect: "Sel: 7 | 2" (characters, not bytes); select all "Sel: 12 | 3"; multi-selection "Sel 2 : 4 | 2" (characters again: "hé" and "ör"); rectangular "Sel N : … | 2"; the Pos field is replaced by the Sel field while there is a selection.
 
 #### UI-035: The line-ending field names the document's EOL
 - Covers: IDM_FORMAT_TODOS, IDM_FORMAT_TOUNIX, IDM_FORMAT_TOMAC
@@ -3864,7 +3865,7 @@ each dialog (their own areas); what the commands do.
 #### L10N-014: Shortcuts keep working in another language
 - Covers: IDM_VIEW_ZOOMIN, IDM_SEARCH_FIND, IDM_EDIT_SELECTALL
 - Channel: launch, keys, menu
-- Steps: Launch in german.xml; read the key of IDM_VIEW_ZOOMIN, IDM_SEARCH_FIND, IDM_EDIT_SELECTALL; press `cmd+=`, `cmd+a`, `cmd+f`.
+- Steps: Launch in german.xml; read the key of IDM_VIEW_ZOOMIN, IDM_SEARCH_FIND, IDM_EDIT_SELECTALL; press `cmd++` (Zoom In's key; `cmd+=` is Edit > Calculate), `cmd+a`, `cmd+f`.
 - Expect: the keys are the same as in English (cmd++, cmd+a, cmd+f); zoom goes to 1, all text is selected, the Find window opens with a German title.
 
 ### Dialogs in other languages
@@ -4356,8 +4357,8 @@ The Language menu (194 commands: None (Normal Text), the letter submenus with ev
 #### LANG-024: The trained model names the language of each written sample
 - Covers: IDM_LANG_ASN1, IDM_LANG_AVS, IDM_LANG_ESCRIPT, IDM_LANG_FORTRAN_77, IDM_LANG_GUI4CLI, IDM_LANG_HOLLYWOOD, IDM_LANG_JSON5, IDM_LANG_JSP, IDM_LANG_KIX, IDM_LANG_ASCII, IDM_LANG_OSCRIPT, IDM_LANG_REGISTRY, IDM_LANG_SPICE, IDM_LANG_TXT2TAGS
 - Channel: mcp, files, modal
-- Steps: For each of the 58 files in `../npp/macos/resources/language-samples/<language>/`: call `detect_language(text)`; copy it to `<tmp>/<stem>` (no extension), queue the alert answer "Use this one" and open it.
-- Expect: for every file `guesses[0].language` is the folder's language (nfo for the nfo folder); `offered` contains it for at least 55 of 58 (known misses: jsp pages beginning with `<html` are declared html; gui4cli/filelist.gui is below the offering level); the opened document's language equals the folder's language for at least 55 of 58.
+- Steps: For each of the 56 files in `../npp/macos/resources/language-samples/<language>/`: call `detect_language(text)`; copy it to `<tmp>/<stem>` (no extension), queue the alert answer "Use this one" and open it.
+- Expect: for every file `guesses[0].language` is the folder's language (nfo for the nfo folder); `offered` contains it for all but at most 3 (known misses: jsp pages beginning with `<html` are declared html; gui4cli/filelist.gui is below the offering level); the opened document's language equals the folder's language for all but at most 3.
 
 #### LANG-025: The upstream function-list corpus is recognised from its contents
 - Covers: IDM_LANG_*
@@ -4459,7 +4460,7 @@ The Language menu (194 commands: None (Normal Text), the letter submenus with ev
 - Covers: IDM_LANG_USER_DLG, IDM_LANG_USER
 - Channel: ui, modal, files, menu
 - Steps: Open the dialog, queue alert `{"button": "OK", "field": "MyLang"}`, click "Create New…".
-- Expect: the modal log has the alert "Name of the new language:"; the popup now shows "MyLang"; `<home>/Library/Application Support/NotepadMac/userDefineLang.xml` exists and holds `<UserLang name="MyLang" … udlVersion="2.1">`; the Language menu has a "MyLang" item after the Markdown ones; running that item (`e2e_menu_invoke` path `Language|MyLang`) sets the document's language to MyLang, checks the item and shows "MyLang" in the status bar.
+- Expect: the modal log has the alert "Name of the new language:"; the popup now shows "MyLang"; `<home>/Library/Application Support/NotepadMac/userDefineLang.xml` exists and holds `<UserLang name="MyLang" … udlVersion="2.1">`; the Language menu has a "MyLang" item among the user languages, before the userDefineLangs folder's (the Markdown ones), as Notepad++ loads userDefineLang.xml first; running that item (`e2e_menu_invoke` path `Language|MyLang`) sets the document's language to MyLang, checks the item and shows "MyLang" in the status bar.
 
 #### LANG-041: A user language defined in the dialog colours a file with its extension
 - Covers: IDM_LANG_USER_DLG
@@ -4913,7 +4914,7 @@ The Settings menu: the Preferences dialog (23 pages, every option that has an ob
 - Covers: IDM_SETTING_PREFERENCE
 - Channel: ui, mcp
 - Steps: HTML "<div class=\"a\" id='b'><p>x</p></div>"; caret in "div"; read runs of indicators 15 (tag) and 16 (attributes); untick "    Highlight tag attributes", Apply; untick "Highlight Matching Tags", Apply.
-- Expect: tag runs at 0..4, 21..22, 30..36 and attribute runs at 5..14, 15..21; without attributes indicator 16 is empty; without matching tags indicator 15 is empty; "    Highlight comment/php/asp zone" ticked makes tags inside "<!-- <b>x</b> -->" match (highlightNonHtmlZone is used nowhere in the port: xfail, BUG).
+- Expect: tag runs at 0..4, 21..22, 30..36 and attribute runs at 5..14, 15..21; without attributes indicator 16 is empty; without matching tags indicator 15 is empty; "    Highlight comment/php/asp zone" is stored (highlightNonHtmlZone) and, as upstream (which reads _enableHiliteNonHTMLZone nowhere but in its settings), tags inside "<!-- <b>x</b> -->" still do not match.
 
 ### Print
 
@@ -5059,7 +5060,7 @@ The Settings menu: the Preferences dialog (23 pages, every option that has an ob
 - Covers: IDM_SETTING_PREFERENCE, IDM_SEARCH_REPLACE
 - Channel: ui, modal, mcp
 - Steps: Text "cat cat cat"; in the Replace window find "cat" replace "dog" and click Replace All with "Confirm Replace All" ticked and alert answer "Cancel"-equivalent (button 2); then answer 1; untick it and repeat on fresh text; tick "Replace: Don't move to the following occurrence", click Replace once.
-- Expect: an alert is logged and cancelling leaves the text; confirming gives "dog dog dog"; unticked, no alert; with "Replace: Don't move to the following occurrence" on, Replace changes the first match and the selection stays on the replaced text instead of moving to the next "cat" (replaceStaysOnOccurrence is used nowhere in the port: xfail, BUG).
+- Expect: an alert is logged and cancelling leaves the text; confirming gives "dog dog dog"; unticked, no alert; with "Replace: Don't move to the following occurrence" on, Replace changes the first match and the caret stays right after it (3..3, upstream's processReplace) instead of moving to the next "cat".
 
 #### SETTINGS-079: Compare options from Searching
 - Covers: IDM_SETTING_PREFERENCE
@@ -6053,7 +6054,7 @@ The Plugins menu: the port's built-in stand-ins for the plugins Windows users in
 - Covers: -
 - Channel: menu, mcp
 - Steps: Spell checking on (en), document "helo world\n" with the caret inside "helo"; dump the editor context menu as a right click builds it (needs the hook: `e2e_menu context=editor` must include the spelling items the menu delegate adds at the caret); then put the caret on "world" and dump again.
-- Expect: on "helo" the menu starts with at most five guesses including "hello", then "Ignore Spelling" and "Learn Spelling" (enabled; never clicked), then a separator, then the usual editor items; on "world" no spelling items appear.
+- Expect: after the port's "Calculate" item (disabled without a selected formula) and its separator, on "helo" the menu offers at most five guesses including "hello", then "Ignore Spelling" and "Learn Spelling" (enabled; never clicked), then a separator, then the usual editor items; on "world" no spelling items appear.
 
 #### PLUGINS-052: Choosing a guess replaces the word
 - Covers: -
@@ -6312,11 +6313,11 @@ Every test that toggles an option puts it back.
 - Steps: Open OLD saved as `old.txt` in tmp; run `Plugins|Compare|Set as First to Compare`; read the modal log.
 - Expect: one alert with message "Set as the first file to compare." and informative text equal to the full path of old.txt; no second pane appears (no `compareSummary` control in `e2e_ui`); the document text is unchanged.
 
-#### COMPARE-002: Set as First on an untitled document sets nothing
+#### COMPARE-002: Set as First takes an untitled document too, and names its tab
 - Covers: -
 - Channel: mcp, menu, modal
 - Steps: Clear All Compares; `app.new("x")` (no file); run `Plugins|Compare|Set as First to Compare`; then run `Plugins|Compare|Compare`.
-- Expect: the Set-as-First alert has an empty informative text (no path); the following Compare shows the alert "Nothing to compare with." with informative text `Choose "Set as First to Compare" on one file, then run Compare on the other.`; no bar, margin 5 width (`SCI_GETMARGINWIDTHN 5`) is 0.
+- Expect: the Set-as-First alert's informative text is the tab's title (ComparePlus's setFirst takes any buffer); the following Compare from the same tab shows the alert "Nothing to compare with." with informative text `Choose "Set as First to Compare" on one file, then run Compare on the other.`; no bar, margin 5 width (`SCI_GETMARGINWIDTHN 5`) is 0.
 
 #### COMPARE-003: Compare with nothing set first explains what to do
 - Covers: -
@@ -7493,7 +7494,7 @@ files under the temporary folder as `/var/...` (not `/private/var/...`), so comp
 #### AGENT-018: The agent interface is off by default
 - Covers: -
 - Channel: launch, cli, files
-- Steps: Launch the copy with empty preferences and without `-NppMac.agentServer YES` (needs a harness launch option, see report); once its process has been running 3 s, check the socket path, then run `app.cli mcp` with `NPPMAC_AGENT_SOCKET` set to that path, write `initialize` id 1 and a `notifications/initialized`, and read stdout for up to 25 s; stop the app with SIGTERM.
+- Steps: Launch the copy with empty preferences and without `-NppMac.agentServer YES` (needs a harness launch option, see report); once its process has been running 3 s, check the socket path, then run `app.cli mcp` with `NPPMAC_AGENT_SOCKET` set to that path, write `initialize` id 1 and a `notifications/initialized`, and read stdout for up to 45 s (the bridge's own 15 s wait for the socket, after a Launch Services request that can take as long again); stop the app with SIGTERM.
 - Expect: no file exists at the socket path; the bridge answers id 1 with error code -32000 whose message names Preferences > MISC. and "Let AI agents drive the editor"; the notification gets nothing; e2e cannot be used here (by design).
 
 #### AGENT-019: The MISC. preference starts and stops listening
@@ -8378,6 +8379,100 @@ The Window menu (Sort By with its ten orders, Windows…, Recent Window, and the
 - Steps: Write autoUpdateMode 2, nextUpdateDate "20200101" and the closed-port proxy; start with `reset=False`; wait 5 s and check nextUpdateDate is still "20200101"; quit gracefully; read the domain with `defaults read`.
 - Expect: nothing is checked at launch in mode 2; the process exits within 10 s with status 0 (the exit check gives up on the failed request); NppMac.nextUpdateDate is then today + updateIntervalDays (yyyyMMdd).
 
+<a id="visual"></a>
+
+## VISUAL — What the window shows, in pixels
+
+Every other area reads the application's state: text, selections, menus, controls, frames. A view that paints over another one leaves all of that right and the window wrong (the second view's tab bar once filled the whole pane below it with the window's colour, and only a screenshot showed it). This area looks at the window as the window server composites it (`e2e_snapshot screen=true`). Structural checks, which do not depend on how text is rendered, run for each key layout: every editor pane on screen shows its document (its line-number margin and its text area are, band by band from top to bottom, in the colours Scintilla was given for them — STYLE_LINENUMBER's and STYLE_DEFAULT's backgrounds — so nothing else is painted over them, and both carry ink: digits and text), no tab bar's frame lies over a pane, every tab the bar shows whole has its label drawn, and a docked panel's tab and content are not blank. Golden pictures cover a few windows that do not change from run to run: they are kept at 1x in `fixtures/golden/<name>.png`, compared after a light blur with a per-channel threshold and a largest share of differing pixels, and written again with `pytest --update-goldens`. Conditions are fixed for the whole area: the app is started with scroll bars always shown and window animations off, the main window is 860x560 points and centred (so it fits a 1024x768 screen), the Default themes, the caret hidden and no field editing when a golden is taken; texts that change by design (the version and build in About, the scratch folder's path in the title and status bar) are masked. Pictures are left in `.work/<worker>/visual`.
+
+### Layouts
+
+#### VISUAL-001: One view shows its text, line numbers and tab labels
+- Covers: -
+- Channel: snapshot, mcp, prefs
+- Steps: For each of light and dark appearance (appearanceMode 1, 2): open `stations.ts` and `forecast.py`; take the main window's picture.
+- Expect: one pane and one tab bar on screen; the pane passes the pane checks (four bands of margin and text in their own colours, digits and text drawn at its top); both tabs show their labels; the bar does not overlap the pane.
+
+#### VISUAL-002: Two views side by side both show their documents
+- Covers: IDM_VIEW_GOTO_ANOTHER_VIEW
+- Channel: snapshot, mcp, prefs
+- Steps: For each of light and dark appearance: open `stations.ts` and `forecast.py`; move `forecast.py` to the other view; take the picture.
+- Expect: two panes and two tab bars; both panes pass the pane checks (the second view's bar does not paint over its pane); every tab label is drawn.
+
+#### VISUAL-003: Two views one above the other both show their documents
+- Covers: IDM_VIEW_GOTO_ANOTHER_VIEW
+- Channel: snapshot, mcp
+- Steps: With the editors' split turned horizontal (NSSplitView.vertical NO: the port has no Rotate on the divider, upstream's SplitterContainer::rotateTo), move a document to the other view; take the picture.
+- Expect: two panes, the second below the first, two tab bars; both panes pass the pane checks.
+
+#### VISUAL-004: Each panel docked on each side is drawn beside the editor
+- Covers: IDM_VIEW_FUNC_LIST, IDM_VIEW_DOC_MAP, IDM_VIEW_DOCLIST, IDM_VIEW_FILEBROWSER
+- Channel: snapshot, mcp
+- Steps: For each side (left, right, top, bottom), with `forecast.py` of a repository with a change in front: show each of Function List, Document Map, Document List, Folder as Workspace and the Git panel in turn, move it to that side, take the picture, hide it.
+- Expect: the pane passes the pane checks and its tab labels are drawn; the dock region between the editor and the content's edge has ink in its tab header (the panel's title) and in its content.
+
+#### VISUAL-005: A vertical tab bar shows every label beside the pane
+- Covers: -
+- Channel: snapshot, prefs
+- Steps: Open six files; set tabBarVertical; take the picture.
+- Expect: the bar is left of the pane, six tabs, every label drawn; the pane passes the pane checks.
+
+#### VISUAL-006: Multi-line tabs show every label above the pane
+- Covers: -
+- Channel: snapshot, prefs
+- Steps: Open fourteen files; set tabBarMultiLine; take the picture.
+- Expect: the tabs take more than one row; every label drawn; the pane below passes the pane checks.
+
+#### VISUAL-007: Compare shows both texts side by side
+- Covers: -
+- Channel: snapshot, modal
+- Steps: Open `new.py` and compare it with `old.py` (Compare with File…); take the picture; clear the compare.
+- Expect: two panes, both pass the pane checks (the changed lines' colours leave the background most of each band).
+
+#### VISUAL-008: Markdown Preview renders beside the text
+- Covers: -
+- Channel: snapshot, mcp
+- Steps: Open `README.md`; show Markdown Preview; wait for its page; take the picture.
+- Expect: the pane passes the pane checks; the preview's dock region has ink in its tab and its content (the rendered page).
+
+#### VISUAL-009: Search results are drawn with the document
+- Covers: IDM_SEARCH_FINDINFILES
+- Channel: snapshot, ui
+- Steps: Find in Files "station" in a folder of two files; close the dialog; take the picture.
+- Expect: every pane on screen (the document and the results) passes the pane checks; every tab label drawn.
+
+#### VISUAL-010: Distraction-free mode shows the text alone
+- Covers: IDM_VIEW_DISTRACTIONFREE
+- Channel: snapshot, mcp
+- Steps: Open `forecast.py`; turn distraction-free mode on; take the picture; turn it off.
+- Expect: one pane passing the pane checks; no tab bar on screen.
+
+### Goldens
+
+#### VISUAL-011: Preferences pages look as recorded
+- Covers: IDM_SETTING_PREFERENCE
+- Channel: snapshot, ui
+- Steps: For each of General, Editing 1, Margins/Border/Edge and Tab Bar: open Preferences on that page, no field editing; take the window's picture.
+- Expect: it matches `fixtures/golden/prefs-<page>.png`.
+
+#### VISUAL-012: The Find dialog looks as recorded
+- Covers: IDM_SEARCH_FIND
+- Channel: snapshot, ui
+- Steps: Open the Find dialog at its defaults on the Find tab, no field editing; take its picture.
+- Expect: it matches `fixtures/golden/find.png`.
+
+#### VISUAL-013: About looks as recorded but for its version
+- Covers: IDM_ABOUT
+- Channel: snapshot, ui
+- Steps: Open About; mask the version, build and build-time lines; take its picture.
+- Expect: exactly three lines masked; the rest matches `fixtures/golden/about.png`.
+
+#### VISUAL-014: The main window on a demo file looks as recorded
+- Covers: -
+- Channel: snapshot, mcp, prefs
+- Steps: For each of light and dark appearance: open `stations.ts` and `forecast.py`, caret at 12:5 and hidden; mask the title and the status bar's path; take the picture.
+- Expect: it matches `fixtures/golden/main-<appearance>.png`.
+
 ## Appendix: menu command coverage
 
 | Menu | Command | Id | Cases |
@@ -8943,7 +9038,7 @@ The Window menu (Sort By with its ten orders, Windows…, Recent Window, and the
 | ? | Update Notepad++ | `IDM_UPDATE_NPP` | WINDOW-016, WINDOW-017, WINDOW-018, WINDOW-019 |
 | ? | Set Updater Proxy... | `IDM_CONFUPDATERPROXY` | WINDOW-015 |
 | ? | Debug Info... | `IDM_DEBUGINFO` | WINDOW-012 |
-| ? | About Notepad++ | `IDM_ABOUT` | UI-065, WINDOW-010, WINDOW-011 |
+| ? | About Notepad++ | `IDM_ABOUT` | UI-065, WINDOW-010, WINDOW-011, VISUAL-013 |
 | Settings | Preferences... | `IDM_SETTING_PREFERENCE` | UI-065, L10N-004, L10N-005, L10N-006, L10N-015, L10N-016 |
 | Settings | Style Configurator... | `IDM_LANGSTYLE_CONFIG_DLG` | UI-065, L10N-015, SETTINGS-092, SETTINGS-093, SETTINGS-094, SETTINGS-095 |
 | Settings | Shortcut Mapper... | `IDM_SETTING_SHORTCUT_MAPPER` | UI-065, L10N-015, SETTINGS-082, SETTINGS-099, SETTINGS-100, SETTINGS-101 |

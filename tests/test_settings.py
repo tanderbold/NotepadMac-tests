@@ -1495,8 +1495,16 @@ def test_settings_053_brace_matching_on_and_off(papp, tmp):
     app.sci(SCI_GOTOPOS, 2)          # inside "value": no brace next to the caret
     app.idle(0.3)
     baseline = lit("off-brace.png")
+    # Two bold parentheses: about 20 such pixels on a Retina screen, a quarter of that at 1x (CI runners).
+    from PIL import Image
+    scale = Image.open(tmp / "off-brace.png").size[0] / app.windows()[0]["frame"][2]
+    enough = max(4, round(5 * scale * scale))
     app.sci(SCI_GOTOPOS, text.index("(") + 1)
-    app.wait(lambda: lit("on-brace.png") > baseline + 20, message="the braces drawn in the brace-light colour")
+    try:
+        app.wait(lambda: lit("on-brace.png") > baseline + enough, message="the braces drawn in the brace-light colour")
+    except TimeoutError:
+        raise AssertionError(f"brace-light pixels: {lit('on-brace.png')} with the caret by the brace, {baseline} "
+                             f"without, {enough} more wanted (snapshot scale {scale:.2f}, colour {colour})")
     set_options(app, "Highlighting", checks={"Highlight matching braces": False})
     app.sci(SCI_GOTOPOS, 2)
     app.sci(SCI_GOTOPOS, text.index("(") + 1)

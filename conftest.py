@@ -19,6 +19,16 @@ os.environ["GIT_CONFIG_GLOBAL"] = str(_GITCONFIG)
 os.environ["GIT_CONFIG_NOSYSTEM"] = "1"
 
 
+def pytest_addoption(parser):
+    parser.addoption("--update-goldens", action="store_true", default=False,
+                     help="write the golden pictures (fixtures/golden) again instead of comparing with them")
+
+
+@pytest.fixture(scope="session")
+def update_goldens(request) -> bool:
+    return bool(request.config.getoption("--update-goldens"))
+
+
 def _worker_id(config) -> str:
     # NPPMAC_E2E_WORKER lets several suites run side by side, each with its
     # own copy, preference domain, home and socket.

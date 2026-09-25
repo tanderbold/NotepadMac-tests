@@ -1,7 +1,7 @@
 # NotepadMac end-to-end tests
 
 The black-box test suite of [NotepadMac](https://github.com/tanderbold/NotepadMac), the native
-macOS port of Notepad++. About 1,500 tests in 22 areas drive the real application the way a user
+macOS port of Notepad++. About 1,500 tests in 23 areas drive the real application the way a user
 does - menus, keys, clicks, dialogs, files on disk, a git repository, local FTP and HTTP servers -
 and check what comes out: the text, the files written, the windows and their controls, the
 pixels. NotepadMac's own repository has a second, in-app suite (`macos/app/Tests.mm`); this one
@@ -23,6 +23,11 @@ looks at the application only from the outside.
   written against upstream Notepad++'s behaviour. A case that finds a defect is not bent to
   pass: it stays `xfail(strict=True)` with the defect in its reason until the application is
   fixed.
+- The VISUAL area (`tests/test_visual.py`) looks at the window as the window server shows it:
+  structural pixel checks for each layout (every pane shows its text and line numbers, tab bars
+  their labels, panels are not blank) and golden pictures of a few stable windows
+  (`fixtures/golden/2x` and `1x`, one set per screen scale). After an intended change of how those windows look,
+  `pytest tests/test_visual.py --update-goldens` writes the goldens again.
 
 ## Running it
 
@@ -52,7 +57,7 @@ names a build.
 | `plan/`, `TEST_PLAN.md` | the cases, area by area, with the upstream behaviour each one checks |
 | `tests/` | the tests, one file per area, and their helpers (`_util_*.py`) |
 | `harness/` | the application under test: copy, launch, the MCP connection, the `e2e_*` calls |
-| `fixtures/` | files the tests open |
+| `fixtures/` | files the tests open; `fixtures/golden` the VISUAL area's pictures |
 | `tools/` | `ci-run.sh`, the VM scripts, `shots.py` (the screenshots in NotepadMac's README and site) |
 | `HARNESS.md` | how the harness and the hooks fit together |
 
