@@ -564,8 +564,10 @@ def test_session_016_the_snapshot_quit_shows_no_alert(app, tmp):
         app.proc = None
 
 
-def _start_backups(app, tmp, interval=5):
+def _start_backups(app, tmp, interval=5, mtime_ns=None):
     pb = write(tmp / "pb.txt", "orig\n")
+    if mtime_ns:
+        os.utime(pb, ns=(mtime_ns, mtime_ns))
     app.open(pb)
     app.set_text("changed\n")
     return pb, _untitled(app, "draft")
@@ -592,7 +594,10 @@ def test_session_017_the_periodic_backup_writes_unsaved_text_at_the_interval(app
 def test_session_018_after_a_crash_the_unsaved_text_comes_back_from_the_backups(app, tmp):
     """SESSION-018: After a crash the unsaved text comes back from the backups"""
     with with_session(app, autosaveEnabled=True, autosaveInterval=5):
-        pb, title = _start_backups(app, tmp)
+        # A time on disk below a FILETIME's 100 ns, as real files have: one that came back from
+        # session.xml a microsecond off made the file "modified by another program", and the
+        # reload question's default threw the restored text away (1 run in 16 by chance).
+        pb, title = _start_backups(app, tmp, mtime_ns=1790357410480738547)
         app.wait(lambda: _backup_of(app, "pb.txt") and _backup_of(app, title), timeout=15, message="two backups")
         # The crash must come after session.xml names both backups, or there is nothing to restore from.
         def session_names_backups():
@@ -609,6 +614,8 @@ def test_session_018_after_a_crash_the_unsaved_text_comes_back_from_the_backups(
         app.wait(lambda: find_doc(app, pb), timeout=15, message="pb.txt back after the crash")
         d = find_doc(app, pb)
         assert d and app.text(d["index"]) == "changed\n" and d["modified"]
+        # The file was left alone: nothing is asked about it.
+        assert not [e for e in app.modal_log() if e.get("kind") == "alert"]
         n = next((x for x in app.docs() if not x["path"] and app.text(x["index"]) == "draft"), None)
         assert n and n["modified"]
         assert pb.read_text() == "orig\n"

@@ -247,7 +247,16 @@ class App:
                  message="the agent socket")
         if self.proc.poll() is not None:
             raise RuntimeError(f"the application exited with {self.proc.returncode}; see {self.log_path}")
-        self.conn = self.connect()
+        # The socket file is there from bind(), a moment before listen(): a connect in between is
+        # refused (seen on a loaded machine), so it is tried again for a while.
+        def connected():
+            try:
+                return self.connect()
+            except ConnectionRefusedError:
+                if self.proc.poll() is not None:
+                    raise
+                return None
+        self.conn = wait_for(connected, 10, message="the agent socket listening")
         self.conn.request("initialize", {"protocolVersion": "2025-06-18", "capabilities": {},
                                          "clientInfo": {"name": "npp-tests", "version": "1"}})
         self.conn.notify("notifications/initialized")
