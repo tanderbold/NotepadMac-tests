@@ -17,7 +17,7 @@ while ! mkdir "$lock" 2>/dev/null; do
 done
 echo $$ > "$lock/pid"
 trap 'rm -rf "$lock"' EXIT
-id="org.npp-e2e.run.$$.$RANDOM"
+id="org.npp-e2e.run.$(uuidgen)"   # unique: two runs sharing a folder mixed their output
 d=~/nm/runs/$id
 mkdir -p "$d"
 print -r -- "$1" | base64 -D > "$d/run.sh"
