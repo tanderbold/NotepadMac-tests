@@ -871,7 +871,12 @@ def test_view_050_monitoring_follows_a_growing_file_and_keeps_it_read_only(app, 
 @pytest.mark.case("VIEW-051")
 def test_view_051_monitoring_is_refused_for_an_unsaved_document(app):
     fresh_doc(app, "abc")
+    app.modal_log(clear=True)
     app.run("IDM_VIEW_MONITORING")
+    # Upstream's DocNoExistToMonitor box says why, not a bare beep.
+    boxes = [e for e in app.modal_log() if e.get("kind") == "alert"]
+    assert [(b["message"], b["informative"]) for b in boxes] == [
+        ("Monitoring problem", "The file should exist to be monitored.")]
     assert app.sci(SCI_GETREADONLY) == 0 and not app.get("editor", "monitoringEnabled")
     assert not app.checked("IDM_VIEW_MONITORING")
     app.select(1, 4)
@@ -884,7 +889,12 @@ def test_view_052_monitoring_is_refused_for_a_document_with_unsaved_changes(app,
     p = write(tmp, "m.txt", "base\n")
     only(app, p)
     app.type("x")
+    app.modal_log(clear=True)
     app.run("IDM_VIEW_MONITORING")
+    # DocTooDirtyToMonitor.
+    boxes = [e for e in app.modal_log() if e.get("kind") == "alert"]
+    assert [(b["message"], b["informative"]) for b in boxes] == [
+        ("Monitoring problem", "The document is dirty. Please save the modification before monitoring it.")]
     assert not app.get("editor", "monitoringEnabled") and app.sci(SCI_GETREADONLY) == 0
     with open(p, "a") as f:
         f.write("more\n")
