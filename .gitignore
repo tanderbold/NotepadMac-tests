@@ -1,0 +1,6 @@
+.venv/
+.work/
+__pycache__/
+.pytest_cache/
+.work-vm/
+.work-ci/

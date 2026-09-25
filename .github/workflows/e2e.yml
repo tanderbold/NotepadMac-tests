@@ -1,0 +1,92 @@
+name: e2e
+
+# The black-box suite against NotepadMac's main branch. Pushes here and manual runs always run;
+# the hourly schedule runs only when NotepadMac's main has a commit this suite has not tested yet.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      app_ref:
+        description: NotepadMac branch, tag or commit to test
+        default: main
+      areas:
+        description: Areas to run, space-separated (empty for all)
+        default: ""
+  schedule:
+    - cron: "23 * * * *"
+
+concurrency:
+  group: e2e
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.head.outputs.sha }}
+      run: ${{ github.event_name != 'schedule' || steps.tested.outputs.cache-hit != 'true' }}
+    steps:
+      - id: head
+        run: |
+          ref="${{ github.event.inputs.app_ref || 'main' }}"
+          sha=$(git ls-remote https://github.com/tanderbold/NotepadMac "$ref" "refs/heads/$ref" "refs/tags/$ref" | head -1 | cut -f1)
+          echo "sha=${sha:-$ref}" >> "$GITHUB_OUTPUT"
+      - id: tested
+        uses: actions/cache/restore@v4
+        with:
+          path: tested.txt
+          key: e2e-tested-${{ steps.head.outputs.sha }}
+          lookup-only: true
+
+  e2e:
+    needs: check
+    if: needs.check.outputs.run == 'true'
+    runs-on: macos-14
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: npp-tests
+      - uses: actions/checkout@v4
+        with:
+          repository: tanderbold/NotepadMac
+          ref: ${{ needs.check.outputs.sha }}
+          path: npp
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Build NotepadMac
+        run: cd npp && NPPMAC_ARCH=native bash macos/build.sh
+      - name: Python packages
+        run: pip install -r npp-tests/requirements.txt
+      - name: Run the suite
+        env:
+          NPPMAC_E2E_APP: ${{ github.workspace }}/npp/macos/build/NotepadMac.app
+        run: |
+          cd npp-tests
+          set +e
+          tools/ci-run.sh ${{ github.event.inputs.areas }}
+          rc=$?
+          { echo "## NotepadMac ${{ needs.check.outputs.sha }}"; cat .work-ci/summary.md; } >> "$GITHUB_STEP_SUMMARY"
+          exit $rc
+      - name: Keep the logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-logs
+          path: |
+            npp-tests/.work-ci/
+            npp-tests/.work/*/app.log
+          if-no-files-found: ignore
+      - name: Remember the tested commit
+        if: always()
+        run: echo "${{ needs.check.outputs.sha }}" > tested.txt
+      - if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: tested.txt
+          key: e2e-tested-${{ needs.check.outputs.sha }}

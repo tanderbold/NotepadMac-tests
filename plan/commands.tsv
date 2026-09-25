@@ -1,0 +1,580 @@
+menu	id	label
+Language	IDM_LANG_TEXT	None (Normal Text)
+Language	IDM_LANG_FLASH	ActionScript
+Language	IDM_LANG_ADA	Ada
+Language	IDM_LANG_ASN1	ASN.1
+Language	IDM_LANG_ASP	ASP
+Language	IDM_LANG_ASM	Assembly
+Language	IDM_LANG_AU3	AutoIt
+Language	IDM_LANG_AVS	AviSynth
+Language	IDM_LANG_BAANC	BaanC
+Language	IDM_LANG_BATCH	Batch
+Language	IDM_LANG_BLITZBASIC	Blitzbasic
+Language	IDM_LANG_C	C
+Language	IDM_LANG_CS	C#
+Language	IDM_LANG_CPP	C++
+Language	IDM_LANG_CAML	Caml
+Language	IDM_LANG_CMAKE	CMake
+Language	IDM_LANG_COBOL	COBOL
+Language	IDM_LANG_CSOUND	CSound
+Language	IDM_LANG_COFFEESCRIPT	CoffeeScript
+Language	IDM_LANG_CSS	CSS
+Language	IDM_LANG_D	D
+Language	IDM_LANG_DIFF	Diff
+Language	IDM_LANG_ERLANG	Erlang
+Language	IDM_LANG_ERRORLIST	ErrorList
+Language	IDM_LANG_ESCSEQ	Escape Sequence (ANSI)
+Language	IDM_LANG_ESCRIPT	ESCRIPT
+Language	IDM_LANG_FORTH	Forth
+Language	IDM_LANG_FORTRAN	Fortran (free form)
+Language	IDM_LANG_FORTRAN_77	Fortran (fixed form)
+Language	IDM_LANG_FREEBASIC	Freebasic
+Language	IDM_LANG_GDSCRIPT	GDScript
+Language	IDM_LANG_GOLANG	Go
+Language	IDM_LANG_GUI4CLI	Gui4Cli
+Language	IDM_LANG_HASKELL	Haskell
+Language	IDM_LANG_HOLLYWOOD	Hollywood
+Language	IDM_LANG_HTML	HTML
+Language	IDM_LANG_INI	INI file
+Language	IDM_LANG_INNO	Inno Setup
+Language	IDM_LANG_IHEX	Intel HEX
+Language	IDM_LANG_JAVA	Java
+Language	IDM_LANG_JS	JavaScript
+Language	IDM_LANG_JSON	JSON
+Language	IDM_LANG_JSON5	JSON5
+Language	IDM_LANG_JSP	JSP
+Language	IDM_LANG_KIX	KIXtart
+Language	IDM_LANG_LISP	LISP
+Language	IDM_LANG_LATEX	LaTeX
+Language	IDM_LANG_LUA	Lua
+Language	IDM_LANG_MAKEFILE	Makefile
+Language	IDM_LANG_MATLAB	Matlab
+Language	IDM_LANG_MSSQL	Microsoft Transact-SQL
+Language	IDM_LANG_MMIXAL	MMIXAL
+Language	IDM_LANG_ASCII	MS-DOS Style
+Language	IDM_LANG_NIM	Nim
+Language	IDM_LANG_NNCRONTAB	Nncrontab
+Language	IDM_LANG_NSIS	NSIS
+Language	IDM_LANG_OBJC	Objective-C
+Language	IDM_LANG_OSCRIPT	OScript
+Language	IDM_LANG_PASCAL	Pascal
+Language	IDM_LANG_PERL	Perl
+Language	IDM_LANG_PHP	PHP
+Language	IDM_LANG_PS	PostScript
+Language	IDM_LANG_POWERSHELL	PowerShell
+Language	IDM_LANG_PROPS	Properties
+Language	IDM_LANG_PUREBASIC	Purebasic
+Language	IDM_LANG_PYTHON	Python
+Language	IDM_LANG_R	R
+Language	IDM_LANG_RAKU	Raku
+Language	IDM_LANG_REBOL	REBOL
+Language	IDM_LANG_REGISTRY	Registry
+Language	IDM_LANG_RC	Resource file
+Language	IDM_LANG_RUBY	Ruby
+Language	IDM_LANG_RUST	Rust
+Language	IDM_LANG_SAS	SAS
+Language	IDM_LANG_BASH	Shell
+Language	IDM_LANG_SCHEME	Scheme
+Language	IDM_LANG_SMALLTALK	Smalltalk
+Language	IDM_LANG_SPICE	Spice
+Language	IDM_LANG_SQL	SQL
+Language	IDM_LANG_SWIFT	Swift
+Language	IDM_LANG_SREC	S-Record
+Language	IDM_LANG_TCL	TCL
+Language	IDM_LANG_TEHEX	Tektronix extended HEX
+Language	IDM_LANG_TEX	TeX
+Language	IDM_LANG_TOML	TOML
+Language	IDM_LANG_TXT2TAGS	txt2tags
+Language	IDM_LANG_TYPESCRIPT	TypeScript
+Language	IDM_LANG_VERILOG	Verilog
+Language	IDM_LANG_VHDL	VHDL
+Language	IDM_LANG_VB	Visual Basic
+Language	IDM_LANG_VISUALPROLOG	Visual Prolog
+Language	IDM_LANG_XML	XML
+Language	IDM_LANG_YAML	YAML
+Language	IDM_LANG_USER_DLG	Define your language...
+Language	IDM_LANG_OPENUDLDIR	Open User Defined Language folder...
+Language	IDM_LANG_UDLCOLLECTION_PROJECT_SITE	Notepad++ User Defined Languages Collection
+Language	IDM_LANG_USER	User-Defined
+Language	IDM_LANG_TEXT	None (Normal Text)
+Language	IDM_LANG_FLASH	A › ActionScript
+Language	IDM_LANG_ADA	A › Ada
+Language	IDM_LANG_ASN1	A › ASN.1
+Language	IDM_LANG_ASP	A › ASP
+Language	IDM_LANG_ASM	A › Assembly
+Language	IDM_LANG_AU3	A › AutoIt
+Language	IDM_LANG_AVS	A › AviSynth
+Language	IDM_LANG_BAANC	B › BaanC
+Language	IDM_LANG_BATCH	B › Batch
+Language	IDM_LANG_BLITZBASIC	B › Blitzbasic
+Language	IDM_LANG_C	C › C
+Language	IDM_LANG_CS	C › C#
+Language	IDM_LANG_CPP	C › C++
+Language	IDM_LANG_CAML	C › Caml
+Language	IDM_LANG_CMAKE	C › CMake
+Language	IDM_LANG_COBOL	C › COBOL
+Language	IDM_LANG_CSOUND	C › CSound
+Language	IDM_LANG_COFFEESCRIPT	C › CoffeeScript
+Language	IDM_LANG_CSS	C › CSS
+Language	IDM_LANG_D	D › D
+Language	IDM_LANG_DIFF	D › Diff
+Language	IDM_LANG_ERLANG	E › Erlang
+Language	IDM_LANG_ERRORLIST	E › ErrorList
+Language	IDM_LANG_ESCSEQ	E › Escape Sequence (ANSI)
+Language	IDM_LANG_ESCRIPT	E › ESCRIPT
+Language	IDM_LANG_FORTH	F › Forth
+Language	IDM_LANG_FORTRAN	F › Fortran (free form)
+Language	IDM_LANG_FORTRAN_77	F › Fortran (fixed form)
+Language	IDM_LANG_FREEBASIC	F › Freebasic
+Language	IDM_LANG_GDSCRIPT	G › GDScript
+Language	IDM_LANG_GOLANG	G › Go
+Language	IDM_LANG_GUI4CLI	G › Gui4Cli
+Language	IDM_LANG_HASKELL	H › Haskell
+Language	IDM_LANG_HOLLYWOOD	H › Hollywood
+Language	IDM_LANG_HTML	H › HTML
+Language	IDM_LANG_INI	I › INI file
+Language	IDM_LANG_INNO	I › Inno Setup
+Language	IDM_LANG_IHEX	I › Intel HEX
+Language	IDM_LANG_JAVA	J › Java
+Language	IDM_LANG_JS	J › JavaScript
+Language	IDM_LANG_JSON	J › JSON
+Language	IDM_LANG_JSON5	J › JSON5
+Language	IDM_LANG_JSP	J › JSP
+Language	IDM_LANG_KIX	KIXtart
+Language	IDM_LANG_LATEX	L › LaTeX
+Language	IDM_LANG_LISP	L › LISP
+Language	IDM_LANG_LUA	L › Lua
+Language	IDM_LANG_MAKEFILE	M › Makefile
+Language	IDM_LANG_MATLAB	M › Matlab
+Language	IDM_LANG_MSSQL	M › Microsoft Transact-SQL
+Language	IDM_LANG_MMIXAL	M › MMIXAL
+Language	IDM_LANG_ASCII	M › MS-DOS Style
+Language	IDM_LANG_NIM	N › Nim
+Language	IDM_LANG_NNCRONTAB	N › Nncrontab
+Language	IDM_LANG_NSIS	N › NSIS
+Language	IDM_LANG_OBJC	O › Objective-C
+Language	IDM_LANG_OSCRIPT	O › OScript
+Language	IDM_LANG_PASCAL	P › Pascal
+Language	IDM_LANG_PERL	P › Perl
+Language	IDM_LANG_PHP	P › PHP
+Language	IDM_LANG_PS	P › PostScript
+Language	IDM_LANG_POWERSHELL	P › PowerShell
+Language	IDM_LANG_PROPS	P › Properties
+Language	IDM_LANG_PUREBASIC	P › Purebasic
+Language	IDM_LANG_PYTHON	P › Python
+Language	IDM_LANG_R	R › R
+Language	IDM_LANG_RAKU	R › Raku
+Language	IDM_LANG_REBOL	R › REBOL
+Language	IDM_LANG_REGISTRY	R › Registry
+Language	IDM_LANG_RC	R › Resource file
+Language	IDM_LANG_RUBY	R › Ruby
+Language	IDM_LANG_RUST	R › Rust
+Language	IDM_LANG_SAS	S › SAS
+Language	IDM_LANG_BASH	S › Shell
+Language	IDM_LANG_SCHEME	S › Scheme
+Language	IDM_LANG_SMALLTALK	S › Smalltalk
+Language	IDM_LANG_SPICE	S › Spice
+Language	IDM_LANG_SQL	S › SQL
+Language	IDM_LANG_SWIFT	S › Swift
+Language	IDM_LANG_SREC	S › S-Record
+Language	IDM_LANG_TCL	T › TCL
+Language	IDM_LANG_TEHEX	T › Tektronix extended HEX
+Language	IDM_LANG_TEX	T › TeX
+Language	IDM_LANG_TOML	T › TOML
+Language	IDM_LANG_TXT2TAGS	T › txt2tags
+Language	IDM_LANG_TYPESCRIPT	T › TypeScript
+Language	IDM_LANG_VB	V › Visual Basic
+Language	IDM_LANG_VISUALPROLOG	V › Visual Prolog
+Language	IDM_LANG_VHDL	V › VHDL
+Language	IDM_LANG_VERILOG	V › Verilog
+Language	IDM_LANG_XML	XML
+Language	IDM_LANG_YAML	YAML
+Language	IDM_LANG_USER_DLG	User Defined Language › Define your language...
+Language	IDM_LANG_OPENUDLDIR	User Defined Language › Open User Defined Language folder...
+Language	IDM_LANG_UDLCOLLECTION_PROJECT_SITE	User Defined Language › Notepad++ User Defined Languages Collection
+Language	IDM_LANG_USER	User-Defined
+Edit	IDM_EDIT_UNDO	Undo
+Edit	IDM_EDIT_REDO	Redo
+Edit	IDM_EDIT_CUT	Cut
+Edit	IDM_EDIT_COPY	Copy
+Edit	IDM_EDIT_PASTE	Paste
+Edit	IDM_EDIT_DELETE	Delete
+Edit	IDM_EDIT_SELECTALL	Select All
+Edit	IDM_EDIT_BEGINENDSELECT	Begin/End Select
+Edit	IDM_EDIT_BEGINENDSELECT_COLUMNMODE	Begin/End Select in Column Mode
+Edit	IDM_EDIT_INSERT_DATETIME_SHORT	Insert › Date Time (short)
+Edit	IDM_EDIT_INSERT_DATETIME_LONG	Insert › Date Time (long)
+Edit	IDM_EDIT_INSERT_DATETIME_CUSTOMIZED	Insert › Date Time (customized)
+Edit	IDM_EDIT_FULLPATHTOCLIP	Copy to Clipboard › Copy Current Full File path
+Edit	IDM_EDIT_FILENAMETOCLIP	Copy to Clipboard › Copy Current Filename
+Edit	IDM_EDIT_CURRENTDIRTOCLIP	Copy to Clipboard › Copy Current Dir. Path
+Edit	IDM_EDIT_COPY_ALL_NAMES	Copy to Clipboard › Copy All Filenames
+Edit	IDM_EDIT_COPY_ALL_PATHS	Copy to Clipboard › Copy All File Paths
+Edit	IDM_EDIT_INS_TAB	Indent › Increase Line Indent
+Edit	IDM_EDIT_RMV_TAB	Indent › Decrease Line Indent
+Edit	IDM_EDIT_UPPERCASE	Convert Case to › UPPERCASE
+Edit	IDM_EDIT_LOWERCASE	Convert Case to › lowercase
+Edit	IDM_EDIT_PROPERCASE_FORCE	Convert Case to › Proper Case
+Edit	IDM_EDIT_PROPERCASE_BLEND	Convert Case to › Proper Case (blend)
+Edit	IDM_EDIT_SENTENCECASE_FORCE	Convert Case to › Sentence case
+Edit	IDM_EDIT_SENTENCECASE_BLEND	Convert Case to › Sentence case (blend)
+Edit	IDM_EDIT_INVERTCASE	Convert Case to › iNVERT cASE
+Edit	IDM_EDIT_RANDOMCASE	Convert Case to › ranDOm CasE
+Edit	IDM_EDIT_DUP_LINE	Line Operations › Duplicate Current Line
+Edit	IDM_EDIT_REMOVE_ANY_DUP_LINES	Line Operations › Remove Duplicate Lines
+Edit	IDM_EDIT_REMOVE_CONSECUTIVE_DUP_LINES	Line Operations › Remove Consecutive Duplicate Lines
+Edit	IDM_EDIT_SPLIT_LINES	Line Operations › Split Lines
+Edit	IDM_EDIT_JOIN_LINES	Line Operations › Join Lines
+Edit	IDM_EDIT_LINE_UP	Line Operations › Move Up Current Line
+Edit	IDM_EDIT_LINE_DOWN	Line Operations › Move Down Current Line
+Edit	IDM_EDIT_REMOVEEMPTYLINES	Line Operations › Remove Empty Lines
+Edit	IDM_EDIT_REMOVEEMPTYLINESWITHBLANK	Line Operations › Remove Empty Lines (Containing Blank characters)
+Edit	IDM_EDIT_BLANKLINEABOVECURRENT	Line Operations › Insert Blank Line Above Current
+Edit	IDM_EDIT_BLANKLINEBELOWCURRENT	Line Operations › Insert Blank Line Below Current
+Edit	IDM_EDIT_SORTLINES_REVERSE_ORDER	Line Operations › Reverse Line Order
+Edit	IDM_EDIT_SORTLINES_RANDOMLY	Line Operations › Randomize Line Order
+Edit	IDM_EDIT_SORTLINES_LEXICOGRAPHIC_ASCENDING	Line Operations › Sort Lines Lexicographically Ascending
+Edit	IDM_EDIT_SORTLINES_LEXICO_CASE_INSENS_ASCENDING	Line Operations › Sort Lines Lex. Ascending Ignoring Case
+Edit	IDM_EDIT_SORTLINES_LOCALE_ASCENDING	Line Operations › Sort Lines In Locale Order Ascending
+Edit	IDM_EDIT_SORTLINES_INTEGER_ASCENDING	Line Operations › Sort Lines As Integers Ascending
+Edit	IDM_EDIT_SORTLINES_DECIMALCOMMA_ASCENDING	Line Operations › Sort Lines As Decimals (Comma) Ascending
+Edit	IDM_EDIT_SORTLINES_DECIMALDOT_ASCENDING	Line Operations › Sort Lines As Decimals (Dot) Ascending
+Edit	IDM_EDIT_SORTLINES_LENGTH_ASCENDING	Line Operations › Sort Lines By Length Ascending
+Edit	IDM_EDIT_SORTLINES_LEXICOGRAPHIC_DESCENDING	Line Operations › Sort Lines Lexicographically Descending
+Edit	IDM_EDIT_SORTLINES_LEXICO_CASE_INSENS_DESCENDING	Line Operations › Sort Lines Lex. Descending Ignoring Case
+Edit	IDM_EDIT_SORTLINES_LOCALE_DESCENDING	Line Operations › Sort Lines In Locale Order Descending
+Edit	IDM_EDIT_SORTLINES_INTEGER_DESCENDING	Line Operations › Sort Lines As Integers Descending
+Edit	IDM_EDIT_SORTLINES_DECIMALCOMMA_DESCENDING	Line Operations › Sort Lines As Decimals (Comma) Descending
+Edit	IDM_EDIT_SORTLINES_DECIMALDOT_DESCENDING	Line Operations › Sort Lines As Decimals (Dot) Descending
+Edit	IDM_EDIT_SORTLINES_LENGTH_DESCENDING	Line Operations › Sort Lines By Length Descending
+Edit	IDM_EDIT_BLOCK_COMMENT	Comment/Uncomment › Toggle Single Line Comment
+Edit	IDM_EDIT_BLOCK_COMMENT_SET	Comment/Uncomment › Single Line Comment
+Edit	IDM_EDIT_BLOCK_UNCOMMENT	Comment/Uncomment › Single Line Uncomment
+Edit	IDM_EDIT_STREAM_COMMENT	Comment/Uncomment › Block Comment
+Edit	IDM_EDIT_STREAM_UNCOMMENT	Comment/Uncomment › Block Uncomment
+Edit	IDM_EDIT_AUTOCOMPLETE	Auto-Completion › Function Completion
+Edit	IDM_EDIT_AUTOCOMPLETE_CURRENTFILE	Auto-Completion › Word Completion
+Edit	IDM_EDIT_FUNCCALLTIP	Auto-Completion › Function Parameters Hint
+Edit	IDM_EDIT_FUNCCALLTIP_PREVIOUS	Auto-Completion › Function Parameters Previous Hint
+Edit	IDM_EDIT_FUNCCALLTIP_NEXT	Auto-Completion › Function Parameters Next Hint
+Edit	IDM_EDIT_AUTOCOMPLETE_PATH	Auto-Completion › Path Completion
+Edit	IDM_FORMAT_TODOS	EOL Conversion › Windows (CR LF)
+Edit	IDM_FORMAT_TOUNIX	EOL Conversion › Unix (LF)
+Edit	IDM_FORMAT_TOMAC	EOL Conversion › Macintosh (CR)
+Edit	IDM_EDIT_TRIMTRAILING	Blank Operations › Trim Trailing Space
+Edit	IDM_EDIT_TRIMLINEHEAD	Blank Operations › Trim Leading Space
+Edit	IDM_EDIT_TRIM_BOTH	Blank Operations › Trim Leading and Trailing Space
+Edit	IDM_EDIT_EOL2WS	Blank Operations › EOL to Space
+Edit	IDM_EDIT_TRIMALL	Blank Operations › Trim both and EOL to Space
+Edit	IDM_EDIT_TAB2SW	Blank Operations › TAB to Space
+Edit	IDM_EDIT_SW2TAB_ALL	Blank Operations › Space to TAB (All)
+Edit	IDM_EDIT_SW2TAB_LEADING	Blank Operations › Space to TAB (Leading)
+Edit	IDM_EDIT_PASTE_AS_HTML	Paste Special › Paste HTML Content
+Edit	IDM_EDIT_PASTE_AS_RTF	Paste Special › Paste RTF Content
+Edit	IDM_EDIT_COPY_BINARY	Paste Special › Copy Binary Content
+Edit	IDM_EDIT_CUT_BINARY	Paste Special › Cut Binary Content
+Edit	IDM_EDIT_PASTE_BINARY	Paste Special › Paste Binary Content
+Edit	IDM_EDIT_OPENSELECTEDFILETOEDIT	On Selection › Open File
+Edit	IDM_EDIT_OPENSELECTEDFILEFOLDERINEXPLORER	On Selection › Open Containing Folder in Explorer
+Edit	IDM_EDIT_REDACT_SELECTION	On Selection › Redact Selection █ (Shift: ●)
+Edit	IDM_EDIT_SEARCHONINTERNET	On Selection › Search on Internet
+Edit	IDM_EDIT_CHANGESEARCHENGINE	On Selection › Change Search Engine...
+Edit	IDM_EDIT_MULTISELECTALL	Multi-select All › Ignore Case  Whole Word
+Edit	IDM_EDIT_MULTISELECTALLMATCHCASE	Multi-select All › Match Case Only
+Edit	IDM_EDIT_MULTISELECTALLWHOLEWORD	Multi-select All › Match Whole Word Only
+Edit	IDM_EDIT_MULTISELECTALLMATCHCASEWHOLEWORD	Multi-select All › Match Case  Whole Word
+Edit	IDM_EDIT_MULTISELECTNEXT	Multi-select Next › Ignore Case  Whole Word
+Edit	IDM_EDIT_MULTISELECTNEXTMATCHCASE	Multi-select Next › Match Case Only
+Edit	IDM_EDIT_MULTISELECTNEXTWHOLEWORD	Multi-select Next › Match Whole Word Only
+Edit	IDM_EDIT_MULTISELECTNEXTMATCHCASEWHOLEWORD	Multi-select Next › Match Case  Whole Word
+Edit	IDM_EDIT_MULTISELECTUNDO	Undo the Latest Added Multi-Select
+Edit	IDM_EDIT_MULTISELECTSSKIP	Skip Current  Go to Next Multi-select
+Edit	IDM_EDIT_COLUMNMODETIP	Column Mode...
+Edit	IDM_EDIT_COLUMNMODE	Column Editor...
+Edit	IDM_EDIT_CHAR_PANEL	Character Panel
+Edit	IDM_EDIT_CLIPBOARDHISTORY_PANEL	Clipboard History
+Edit	IDM_EDIT_TOGGLEREADONLY	Read-Only in Notepad++ › Read-Only on Current Document
+Edit	IDM_EDIT_SETREADONLYFORALLDOCS	Read-Only in Notepad++ › Read-Only for All Documents
+Edit	IDM_EDIT_CLEARREADONLYFORALLDOCS	Read-Only in Notepad++ › Clear Read-Only for All Documents
+Edit	IDM_EDIT_TOGGLESYSTEMREADONLY	Read-Only Attribute in Windows
+View	IDM_VIEW_ALWAYSONTOP	Always on Top
+View	IDM_VIEW_FULLSCREENTOGGLE	Toggle Full Screen Mode
+View	IDM_VIEW_POSTIT	Post-It
+View	IDM_VIEW_DISTRACTIONFREE	Distraction Free Mode
+View	IDM_VIEW_IN_FIREFOX	View Current File in › Firefox
+View	IDM_VIEW_IN_CHROME	View Current File in › Chrome
+View	IDM_VIEW_IN_EDGE	View Current File in › Edge
+View	IDM_VIEW_IN_IE	View Current File in › IE
+View	IDM_VIEW_TAB_SPACE	Show Symbol › Show Space and Tab
+View	IDM_VIEW_EOL	Show Symbol › Show End of Line
+View	IDM_VIEW_NPC	Show Symbol › Show Non-Printing Characters
+View	IDM_VIEW_NPC_CCUNIEOL	Show Symbol › Show Control Characters  Unicode EOL
+View	IDM_VIEW_ALL_CHARACTERS	Show Symbol › Show All Characters
+View	IDM_VIEW_INDENT_GUIDE	Show Symbol › Show Indent Guide
+View	IDM_VIEW_WRAP_SYMBOL	Show Symbol › Show Wrap Symbol
+View	IDM_VIEW_ZOOMIN	Zoom › Zoom In (Ctrl+Mouse Wheel Up)
+View	IDM_VIEW_ZOOMOUT	Zoom › Zoom Out (Ctrl+Mouse Wheel Down)
+View	IDM_VIEW_ZOOMRESTORE	Zoom › Restore Default Zoom
+View	IDM_VIEW_ZOOM_SYNC	Zoom › Synchronize Across Views
+View	IDM_VIEW_GOTO_ANOTHER_VIEW	Move/Clone Current Document › Move to Other View
+View	IDM_VIEW_CLONE_TO_ANOTHER_VIEW	Move/Clone Current Document › Clone to Other View
+View	IDM_VIEW_GOTO_NEW_INSTANCE	Move/Clone Current Document › Move to New Instance
+View	IDM_VIEW_LOAD_IN_NEW_INSTANCE	Move/Clone Current Document › Open in New Instance
+View	IDM_VIEW_TAB1	Tab › 1st Tab
+View	IDM_VIEW_TAB2	Tab › 2nd Tab
+View	IDM_VIEW_TAB3	Tab › 3rd Tab
+View	IDM_VIEW_TAB4	Tab › 4th Tab
+View	IDM_VIEW_TAB5	Tab › 5th Tab
+View	IDM_VIEW_TAB6	Tab › 6th Tab
+View	IDM_VIEW_TAB7	Tab › 7th Tab
+View	IDM_VIEW_TAB8	Tab › 8th Tab
+View	IDM_VIEW_TAB9	Tab › 9th Tab
+View	IDM_VIEW_TAB_START	Tab › First Tab
+View	IDM_VIEW_TAB_END	Tab › Last Tab
+View	IDM_VIEW_TAB_NEXT	Tab › Next Tab
+View	IDM_VIEW_TAB_PREV	Tab › Previous Tab
+View	IDM_VIEW_GOTO_START	Tab › Move to Start
+View	IDM_VIEW_GOTO_END	Tab › Move to End
+View	IDM_VIEW_TAB_MOVEFORWARD	Tab › Move Tab Forward
+View	IDM_VIEW_TAB_MOVEBACKWARD	Tab › Move Tab Backward
+View	IDM_VIEW_TAB_COLOUR_1	Tab › Apply Color 1
+View	IDM_VIEW_TAB_COLOUR_2	Tab › Apply Color 2
+View	IDM_VIEW_TAB_COLOUR_3	Tab › Apply Color 3
+View	IDM_VIEW_TAB_COLOUR_4	Tab › Apply Color 4
+View	IDM_VIEW_TAB_COLOUR_5	Tab › Apply Color 5
+View	IDM_VIEW_TAB_COLOUR_NONE	Tab › Remove Color
+View	IDM_VIEW_WRAP	Word wrap
+View	IDM_VIEW_SWITCHTO_OTHER_VIEW	Focus on Another View
+View	IDM_VIEW_HIDELINES	Hide Lines
+View	IDM_VIEW_FOLDALL	Fold All
+View	IDM_VIEW_UNFOLDALL	Unfold All
+View	IDM_VIEW_FOLD_CURRENT	Fold Current Level
+View	IDM_VIEW_UNFOLD_CURRENT	Unfold Current Level
+View	IDM_VIEW_FOLD_1	Fold Level › 1
+View	IDM_VIEW_FOLD_2	Fold Level › 2
+View	IDM_VIEW_FOLD_3	Fold Level › 3
+View	IDM_VIEW_FOLD_4	Fold Level › 4
+View	IDM_VIEW_FOLD_5	Fold Level › 5
+View	IDM_VIEW_FOLD_6	Fold Level › 6
+View	IDM_VIEW_FOLD_7	Fold Level › 7
+View	IDM_VIEW_FOLD_8	Fold Level › 8
+View	IDM_VIEW_UNFOLD_1	Unfold Level › 1
+View	IDM_VIEW_UNFOLD_2	Unfold Level › 2
+View	IDM_VIEW_UNFOLD_3	Unfold Level › 3
+View	IDM_VIEW_UNFOLD_4	Unfold Level › 4
+View	IDM_VIEW_UNFOLD_5	Unfold Level › 5
+View	IDM_VIEW_UNFOLD_6	Unfold Level › 6
+View	IDM_VIEW_UNFOLD_7	Unfold Level › 7
+View	IDM_VIEW_UNFOLD_8	Unfold Level › 8
+View	IDM_VIEW_SUMMARY	Summary...
+View	IDM_VIEW_PROJECT_PANEL_1	Project Panels › Project Panel 1
+View	IDM_VIEW_PROJECT_PANEL_2	Project Panels › Project Panel 2
+View	IDM_VIEW_PROJECT_PANEL_3	Project Panels › Project Panel 3
+View	IDM_VIEW_FILEBROWSER	Folder as Workspace
+View	IDM_VIEW_DOC_MAP	Document Map
+View	IDM_VIEW_DOCLIST	Document List
+View	IDM_VIEW_FUNC_LIST	Function List
+View	IDM_VIEW_SYNSCROLLV	Synchronize Vertical Scrolling
+View	IDM_VIEW_SYNSCROLLH	Synchronize Horizontal Scrolling
+View	IDM_EDIT_RTL	Text Direction RTL
+View	IDM_EDIT_LTR	Text Direction LTR
+View	IDM_VIEW_MONITORING	Monitoring (tail -f)
+Search	IDM_SEARCH_FIND	Find...
+Search	IDM_SEARCH_FINDINFILES	Find in Files...
+Search	IDM_SEARCH_FINDNEXT	Find Next
+Search	IDM_SEARCH_FINDPREV	Find Previous
+Search	IDM_SEARCH_SETANDFINDNEXT	Select and Find Next
+Search	IDM_SEARCH_SETANDFINDPREV	Select and Find Previous
+Search	IDM_SEARCH_VOLATILE_FINDNEXT	Find (Volatile) Next
+Search	IDM_SEARCH_VOLATILE_FINDPREV	Find (Volatile) Previous
+Search	IDM_SEARCH_REPLACE	Replace...
+Search	IDM_SEARCH_FINDINCREMENT	Incremental Search
+Search	IDM_FOCUS_ON_FOUND_RESULTS	Search Results Window
+Search	IDM_SEARCH_GOTONEXTFOUND	Next Search Result
+Search	IDM_SEARCH_GOTOPREVFOUND	Previous Search Result
+Search	IDM_SEARCH_GOTOLINE	Go to...
+Search	IDM_SEARCH_GOTOMATCHINGBRACE	Go to Matching Brace
+Search	IDM_SEARCH_SELECTMATCHINGBRACES	Select All In-between {} [] or ()
+Search	IDM_SEARCH_MARK	Mark...
+Search	IDM_SEARCH_CHANGED_NEXT	Change History › Go to Next Change
+Search	IDM_SEARCH_CHANGED_PREV	Change History › Go to Previous Change
+Search	IDM_SEARCH_CLEAR_CHANGE_HISTORY	Change History › Clear Change History
+Search	IDM_SEARCH_MARKALLEXT1	Style All Occurrences of Token › Using 1st Style
+Search	IDM_SEARCH_MARKALLEXT2	Style All Occurrences of Token › Using 2nd Style
+Search	IDM_SEARCH_MARKALLEXT3	Style All Occurrences of Token › Using 3rd Style
+Search	IDM_SEARCH_MARKALLEXT4	Style All Occurrences of Token › Using 4th Style
+Search	IDM_SEARCH_MARKALLEXT5	Style All Occurrences of Token › Using 5th Style
+Search	IDM_SEARCH_MARKONEEXT1	Style One Token › Using 1st Style
+Search	IDM_SEARCH_MARKONEEXT2	Style One Token › Using 2nd Style
+Search	IDM_SEARCH_MARKONEEXT3	Style One Token › Using 3rd Style
+Search	IDM_SEARCH_MARKONEEXT4	Style One Token › Using 4th Style
+Search	IDM_SEARCH_MARKONEEXT5	Style One Token › Using 5th Style
+Search	IDM_SEARCH_UNMARKALLEXT1	Clear Style › Clear 1st Style
+Search	IDM_SEARCH_UNMARKALLEXT2	Clear Style › Clear 2nd Style
+Search	IDM_SEARCH_UNMARKALLEXT3	Clear Style › Clear 3rd Style
+Search	IDM_SEARCH_UNMARKALLEXT4	Clear Style › Clear 4th Style
+Search	IDM_SEARCH_UNMARKALLEXT5	Clear Style › Clear 5th Style
+Search	IDM_SEARCH_CLEARALLMARKS	Clear Style › Clear all Styles
+Search	IDM_SEARCH_GOPREVMARKER1	Jump Up › 1st Style
+Search	IDM_SEARCH_GOPREVMARKER2	Jump Up › 2nd Style
+Search	IDM_SEARCH_GOPREVMARKER3	Jump Up › 3rd Style
+Search	IDM_SEARCH_GOPREVMARKER4	Jump Up › 4th Style
+Search	IDM_SEARCH_GOPREVMARKER5	Jump Up › 5th Style
+Search	IDM_SEARCH_GOPREVMARKER_DEF	Jump Up › Find Mark Style
+Search	IDM_SEARCH_GONEXTMARKER1	Jump Down › 1st Style
+Search	IDM_SEARCH_GONEXTMARKER2	Jump Down › 2nd Style
+Search	IDM_SEARCH_GONEXTMARKER3	Jump Down › 3rd Style
+Search	IDM_SEARCH_GONEXTMARKER4	Jump Down › 4th Style
+Search	IDM_SEARCH_GONEXTMARKER5	Jump Down › 5th Style
+Search	IDM_SEARCH_GONEXTMARKER_DEF	Jump Down › Find Mark Style
+Search	IDM_SEARCH_STYLE1TOCLIP	Copy Styled Text › 1st Style
+Search	IDM_SEARCH_STYLE2TOCLIP	Copy Styled Text › 2nd Style
+Search	IDM_SEARCH_STYLE3TOCLIP	Copy Styled Text › 3rd Style
+Search	IDM_SEARCH_STYLE4TOCLIP	Copy Styled Text › 4th Style
+Search	IDM_SEARCH_STYLE5TOCLIP	Copy Styled Text › 5th Style
+Search	IDM_SEARCH_ALLSTYLESTOCLIP	Copy Styled Text › All Styles
+Search	IDM_SEARCH_MARKEDTOCLIP	Copy Styled Text › Find Mark Style
+Search	IDM_SEARCH_TOGGLE_BOOKMARK	Bookmark › Toggle Bookmark
+Search	IDM_SEARCH_NEXT_BOOKMARK	Bookmark › Next Bookmark
+Search	IDM_SEARCH_PREV_BOOKMARK	Bookmark › Previous Bookmark
+Search	IDM_SEARCH_CLEAR_BOOKMARKS	Bookmark › Clear All Bookmarks
+Search	IDM_SEARCH_CUTMARKEDLINES	Bookmark › Cut Bookmarked Lines
+Search	IDM_SEARCH_COPYMARKEDLINES	Bookmark › Copy Bookmarked Lines
+Search	IDM_SEARCH_PASTEMARKEDLINES	Bookmark › Paste to (Replace) Bookmarked Lines
+Search	IDM_SEARCH_DELETEMARKEDLINES	Bookmark › Remove Bookmarked Lines
+Search	IDM_SEARCH_DELETEUNMARKEDLINES	Bookmark › Remove Non-Bookmarked Lines
+Search	IDM_SEARCH_INVERSEMARKS	Bookmark › Inverse Bookmarks
+Search	IDM_SEARCH_FINDCHARINRANGE	Find characters in range...
+Encoding	IDM_FORMAT_ANSI	ANSI
+Encoding	IDM_FORMAT_AS_UTF_8	UTF-8
+Encoding	IDM_FORMAT_UTF_8	UTF-8-BOM
+Encoding	IDM_FORMAT_UTF_16BE	UTF-16 BE BOM
+Encoding	IDM_FORMAT_UTF_16LE	UTF-16 LE BOM
+Encoding	IDM_FORMAT_ISO_8859_6	Character sets › Arabic › ISO 8859-6
+Encoding	IDM_FORMAT_DOS_720	Character sets › Arabic › OEM 720
+Encoding	IDM_FORMAT_WIN_1256	Character sets › Arabic › Windows-1256
+Encoding	IDM_FORMAT_ISO_8859_4	Character sets › Baltic › ISO 8859-4
+Encoding	IDM_FORMAT_ISO_8859_13	Character sets › Baltic › ISO 8859-13
+Encoding	IDM_FORMAT_DOS_775	Character sets › Baltic › OEM 775
+Encoding	IDM_FORMAT_WIN_1257	Character sets › Baltic › Windows-1257
+Encoding	IDM_FORMAT_ISO_8859_14	Character sets › Celtic › ISO 8859-14
+Encoding	IDM_FORMAT_ISO_8859_5	Character sets › Cyrillic › ISO 8859-5
+Encoding	IDM_FORMAT_KOI8R_CYRILLIC	Character sets › Cyrillic › KOI8-R
+Encoding	IDM_FORMAT_KOI8U_CYRILLIC	Character sets › Cyrillic › KOI8-U
+Encoding	IDM_FORMAT_MAC_CYRILLIC	Character sets › Cyrillic › Macintosh
+Encoding	IDM_FORMAT_DOS_855	Character sets › Cyrillic › OEM 855
+Encoding	IDM_FORMAT_DOS_866	Character sets › Cyrillic › OEM 866
+Encoding	IDM_FORMAT_WIN_1251	Character sets › Cyrillic › Windows-1251
+Encoding	IDM_FORMAT_DOS_852	Character sets › Central European › OEM 852
+Encoding	IDM_FORMAT_WIN_1250	Character sets › Central European › Windows-1250
+Encoding	IDM_FORMAT_BIG5	Character sets › Chinese › Big5 (Traditional)
+Encoding	IDM_FORMAT_GB2312	Character sets › Chinese › GB2312 (Simplified)
+Encoding	IDM_FORMAT_ISO_8859_2	Character sets › Eastern European › ISO 8859-2
+Encoding	IDM_FORMAT_ISO_8859_7	Character sets › Greek › ISO 8859-7
+Encoding	IDM_FORMAT_DOS_737	Character sets › Greek › OEM 737
+Encoding	IDM_FORMAT_DOS_869	Character sets › Greek › OEM 869
+Encoding	IDM_FORMAT_WIN_1253	Character sets › Greek › Windows-1253
+Encoding	IDM_FORMAT_ISO_8859_8	Character sets › Hebrew › ISO 8859-8
+Encoding	IDM_FORMAT_DOS_862	Character sets › Hebrew › OEM 862
+Encoding	IDM_FORMAT_WIN_1255	Character sets › Hebrew › Windows-1255
+Encoding	IDM_FORMAT_SHIFT_JIS	Character sets › Japanese › Shift-JIS
+Encoding	IDM_FORMAT_KOREAN_WIN	Character sets › Korean › Windows 949
+Encoding	IDM_FORMAT_EUC_KR	Character sets › Korean › EUC-KR
+Encoding	IDM_FORMAT_DOS_861	Character sets › North European › OEM 861 : Icelandic
+Encoding	IDM_FORMAT_DOS_865	Character sets › North European › OEM 865 : Nordic
+Encoding	IDM_FORMAT_TIS_620	Character sets › Thai › TIS-620
+Encoding	IDM_FORMAT_ISO_8859_3	Character sets › Turkish › ISO 8859-3
+Encoding	IDM_FORMAT_ISO_8859_9	Character sets › Turkish › ISO 8859-9
+Encoding	IDM_FORMAT_DOS_857	Character sets › Turkish › OEM 857
+Encoding	IDM_FORMAT_WIN_1254	Character sets › Turkish › Windows-1254
+Encoding	IDM_FORMAT_ISO_8859_1	Character sets › Western European › ISO 8859-1
+Encoding	IDM_FORMAT_ISO_8859_15	Character sets › Western European › ISO 8859-15
+Encoding	IDM_FORMAT_DOS_850	Character sets › Western European › OEM 850
+Encoding	IDM_FORMAT_DOS_858	Character sets › Western European › OEM 858
+Encoding	IDM_FORMAT_DOS_860	Character sets › Western European › OEM 860 : Portuguese
+Encoding	IDM_FORMAT_DOS_863	Character sets › Western European › OEM 863 : French
+Encoding	IDM_FORMAT_DOS_437	Character sets › Western European › OEM-US : CP437
+Encoding	IDM_FORMAT_WIN_1252	Character sets › Western European › Windows-1252
+Encoding	IDM_FORMAT_WIN_1258	Character sets › Vietnamese › Windows-1258
+Encoding	IDM_FORMAT_CONV2_ANSI	Convert to ANSI
+Encoding	IDM_FORMAT_CONV2_AS_UTF_8	Convert to UTF-8
+Encoding	IDM_FORMAT_CONV2_UTF_8	Convert to UTF-8-BOM
+Encoding	IDM_FORMAT_CONV2_UTF_16BE	Convert to UTF-16 BE BOM
+Encoding	IDM_FORMAT_CONV2_UTF_16LE	Convert to UTF-16 LE BOM
+File	IDM_FILE_NEW	New
+File	IDM_FILE_OPEN	Open...
+File	IDM_FILE_OPEN_FOLDER	Open Containing Folder › Explorer
+File	IDM_FILE_OPEN_CMD	Open Containing Folder › cmd
+File	IDM_FILE_OPEN_POWERSHELL	Open Containing Folder › PowerShell
+File	IDM_FILE_CONTAININGFOLDERASWORKSPACE	Open Containing Folder › Folder as Workspace
+File	IDM_FILE_OPEN_DEFAULT_VIEWER	Open in Default Viewer
+File	IDM_FILE_OPENFOLDERASWORKSPACE	Open Folder as Workspace...
+File	IDM_FILE_RELOAD	Reload from Disk
+File	IDM_FILE_SAVE	Save
+File	IDM_FILE_SAVEAS	Save As...
+File	IDM_FILE_SAVECOPYAS	Save a Copy As...
+File	IDM_FILE_SAVEALL	Save All
+File	IDM_FILE_RENAME	Rename...
+File	IDM_FILE_CLOSE	Close
+File	IDM_FILE_CLOSEALL	Close All
+File	IDM_FILE_CLOSEALL_BUT_CURRENT	Close Multiple Documents › Close All but Active Document
+File	IDM_FILE_CLOSEALL_BUT_PINNED	Close Multiple Documents › Close All but Pinned Documents
+File	IDM_FILE_CLOSEALL_TOLEFT	Close Multiple Documents › Close All to the Left
+File	IDM_FILE_CLOSEALL_TORIGHT	Close Multiple Documents › Close All to the Right
+File	IDM_FILE_CLOSEALL_UNCHANGED	Close Multiple Documents › Close All Unchanged
+File	IDM_FILE_DELETE	Move to Recycle Bin
+File	IDM_FILE_LOADSESSION	Load Session...
+File	IDM_FILE_SAVESESSION	Save Session...
+File	IDM_FILE_PRINT	Print...
+File	IDM_FILE_PRINTNOW	Print Now
+File	IDM_FILE_EXIT	Exit
+Tools	IDM_TOOL_MD5_GENERATE	MD5 › Generate...
+Tools	IDM_TOOL_MD5_GENERATEFROMFILE	MD5 › Generate from files...
+Tools	IDM_TOOL_MD5_GENERATEINTOCLIPBOARD	MD5 › Generate from selection into clipboard
+Tools	IDM_TOOL_SHA1_GENERATE	SHA-1 › Generate...
+Tools	IDM_TOOL_SHA1_GENERATEFROMFILE	SHA-1 › Generate from files...
+Tools	IDM_TOOL_SHA1_GENERATEINTOCLIPBOARD	SHA-1 › Generate from selection into clipboard
+Tools	IDM_TOOL_SHA256_GENERATE	SHA-256 › Generate...
+Tools	IDM_TOOL_SHA256_GENERATEFROMFILE	SHA-256 › Generate from files...
+Tools	IDM_TOOL_SHA256_GENERATEINTOCLIPBOARD	SHA-256 › Generate from selection into clipboard
+Tools	IDM_TOOL_SHA512_GENERATE	SHA-512 › Generate...
+Tools	IDM_TOOL_SHA512_GENERATEFROMFILE	SHA-512 › Generate from files...
+Tools	IDM_TOOL_SHA512_GENERATEINTOCLIPBOARD	SHA-512 › Generate from selection into clipboard
+Window	IDM_WINDOW_SORT_FN_ASC	Sort By › Name A to Z
+Window	IDM_WINDOW_SORT_FN_DSC	Sort By › Name Z to A
+Window	IDM_WINDOW_SORT_FP_ASC	Sort By › Path A to Z
+Window	IDM_WINDOW_SORT_FP_DSC	Sort By › Path Z to A
+Window	IDM_WINDOW_SORT_FT_ASC	Sort By › Type A to Z
+Window	IDM_WINDOW_SORT_FT_DSC	Sort By › Type Z to A
+Window	IDM_WINDOW_SORT_FS_ASC	Sort By › Content Length Ascending
+Window	IDM_WINDOW_SORT_FS_DSC	Sort By › Content Length Descending
+Window	IDM_WINDOW_SORT_FD_ASC	Sort By › Modified Time Ascending
+Window	IDM_WINDOW_SORT_FD_DSC	Sort By › Modified Time Descending
+Window	IDM_WINDOW_WINDOWS	Windows...
+Window	IDM_WINDOW_MRU_FIRST	Recent Window
+?	IDM_CMDLINEARGUMENTS	Command Line Arguments...
+?	IDM_HOMESWEETHOME	Notepad++ Home
+?	IDM_PROJECTPAGE	Notepad++ Project Page
+?	IDM_ONLINEDOCUMENT	Notepad++ Online User Manual
+?	IDM_FORUM	Notepad++ Community (Forum)
+?	IDM_UPDATE_NPP	Update Notepad++
+?	IDM_CONFUPDATERPROXY	Set Updater Proxy...
+?	IDM_DEBUGINFO	Debug Info...
+?	IDM_ABOUT	About Notepad++
+Settings	IDM_SETTING_PREFERENCE	Preferences...
+Settings	IDM_LANGSTYLE_CONFIG_DLG	Style Configurator...
+Settings	IDM_SETTING_SHORTCUT_MAPPER	Shortcut Mapper...
+Settings	IDM_SETTING_IMPORTPLUGIN	Import › Import plugin(s)...
+Settings	IDM_SETTING_IMPORTSTYLETHEMES	Import › Import style theme(s)...
+Settings	IDM_SETTING_EDITCONTEXTMENU	Edit Popup ContextMenu
+Macro	IDM_MACRO_STARTRECORDINGMACRO	Start Recording
+Macro	IDM_MACRO_STOPRECORDINGMACRO	Stop Recording
+Macro	IDM_MACRO_PLAYBACKRECORDEDMACRO	Playback
+Macro	IDM_MACRO_SAVECURRENTMACRO	Save Current Recorded Macro...
+Macro	IDM_MACRO_RUNMULTIMACRODLG	Run a Macro Multiple Times...
+Run	IDM_EXECUTE	Run...
+Run	IDM_EXECUTE_VALIDATE_SHORTCUTSXML	Validate shortcuts.xml
+(root)	IDM_FILE_NEW	＋
+(root)	IDM_FILE_CLOSE	✕
+Plugins	IDM_SETTING_OPENPLUGINSDIR	Open Plugins Folder...
+▼	IDM_DROPLIST_LIST	Recent Window
