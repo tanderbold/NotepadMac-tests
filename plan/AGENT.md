@@ -133,8 +133,8 @@ files under the temporary folder as `/var/...` (not `/private/var/...`), so comp
 ### AGENT-019: The MISC. preference starts and stops listening
 - Covers: IDM_SETTING_PREFERENCE
 - Channel: launch, ui, prefs, files
-- Steps: Launch with `agentServer` = YES in the preference domain instead of the command-line argument (harness option, see report); open Settings > Preferences, page MISC., uncheck "Let AI agents drive the editor (MCP)" with `e2e_act` on the connection already open; then check it again.
-- Expect: after unchecking, `agentServer` reads NO, the socket file is gone and a new `connect` is refused, while the already-open connection is still served; after checking again the socket file is back with mode 0600 and a new connection answers `ping`.
+- Steps: Launch with `agentServer` = YES in the preference domain instead of the command-line argument (harness option, see report); open a second raw connection and ping; open Settings > Preferences, page MISC., uncheck "Let AI agents drive the editor (MCP)" and Apply with `e2e_act`; relaunch with the flag and read the persistent domain.
+- Expect: after Apply the socket file is gone and a new `connect` is refused; the connections already open are ended (the second one reads end of stream; the harness's own ends too), so no agent keeps control after the user switched it off; the application keeps running; the stored `agentServer` is NO. (Turning it on from the preference is checked by the in-app suite, "Agent (socket life)": with the server off no connection is left to drive the dialog.)
 
 ### AGENT-020: A stale socket file is replaced at launch
 - Covers: -
@@ -679,3 +679,18 @@ files under the temporary folder as `/var/...` (not `/private/var/...`), so comp
 - Channel: mcp
 - Steps: Call get_document first_line "2"; find what "o" limit "1"; go_to line true; bookmarks add "1"; compare left {"text": 5} right {"text": "5"}; open_document line "3".
 - Expect: each is an error naming the argument and the expected type, as the tool's inputSchema declares; none silently falls back to its default. (Currently each runs with the default: BUG — fix one in the server's parameter layer for all tools.)
+
+## What stays the user's
+
+### AGENT-106: An agent closing the last tab never quits the editor, whatever "Exit on close the last tab" says
+- Covers: IDM_FILE_CLOSEALL
+- Channel: mcp, prefs
+- Steps: Set exitOnClosingLastTab true; open two documents from text; run IDM_FILE_CLOSEALL; then call close_document on the fresh tab it left.
+- Expect: Close All answers `ran` true and leaves one tab; close_document answers `closed` true, `open_documents` 1; the process is still running after each and one empty unmodified tab is open. Quitting is refused to agents (IDM_FILE_EXIT), so the setting quits only for the user's own close (SETTINGS-074).
+
+### AGENT-107: While an app-modal dialog waits for the user, tools that change the editor are refused
+- Covers: -
+- Channel: mcp
+- Steps: Make a document "asked" with "abc\n"; with real modals, run IDM_EDIT_COLUMNMODE asynchronously; while its alert is up, on a second connection call edit_document (text "changed\n"), open_document (text), get_document; press Cancel; then edit the document.
+- Expect: edit_document and open_document are error results "NotepadMac is waiting for the user to answer a dialog; <tool> can run once it is closed"; get_document answers "abc\n"; after Cancel the text is still "abc\n", no tab was added, and the edit then goes through.
+

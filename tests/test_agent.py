@@ -409,19 +409,24 @@ def test_agent_019_the_misc_preference_starts_and_stops_listening(app):
         w = _prefs_window(app)
         box = app.controls(w, title=label)[0]
         assert box["state"] == 1
-        app.click(w, label)
-        app.click(w, "Apply")
-        app.wait(lambda: not os.path.exists(app.socket_path), 5, "the socket to go")
-        assert app.pref("agentServer") in (False, 0, "NO", "0")
-        with pytest.raises(OSError):
-            Raw(app.socket_path, 2)
-        assert len(app.docs()) >= 1      # the open connection is still served
-        app.click(w, label)
-        app.click(w, "Apply")
-        app.wait(lambda: os.path.exists(app.socket_path), 5, "the socket to come back")
-        assert stat.S_IMODE(os.stat(app.socket_path).st_mode) == 0o600
-        with raw(app) as c:
-            assert c.request(1, "ping")["result"] == {}
+        with raw(app, timeout=5) as other:
+            assert other.request(1, "ping")["result"] == {}
+            app.click(w, label)
+            try:
+                app.click(w, "Apply")        # the answer may not come: this connection ends too
+            except (ConnectionError, OSError, TimeoutError):
+                pass
+            wait_for(lambda: not os.path.exists(app.socket_path), 5, message="the socket to go")
+            with pytest.raises(OSError):
+                Raw(app.socket_path, 2)
+            # Switched off, no agent keeps control: the connection made before is ended.
+            other.sock.settimeout(5)
+            assert other.sock.recv(1024) == b""
+        assert app.running
+        # Stored off: a launch that listens again (the flag) reads it back from the domain.
+        app.stop(graceful=False)
+        app.start(clean_home=False, reset=False)
+        assert app.call("e2e_prefs", all=True)["values"]["all"].get("agentServer") in (False, 0, "NO", "0")
     finally:
         restart_default(app)
 
@@ -983,3 +988,57 @@ def test_agent_052_close_document_keeps_the_user_s_unsaved_work_unless_told(app,
     assert r == {"closed": True, "open_documents": 1}
     docs = app.docs()
     assert len(docs) == 1 and docs[0]["title"] == "new 1" and docs[0]["bytes"] == 0
+
+
+# ------------------------------------------------ What stays the user's
+
+
+@pytest.mark.case("AGENT-106")
+def test_agent_106_an_agent_closing_the_last_tab_never_quits_the_editor(app):
+    """AGENT-106: An agent closing the last tab never quits the editor, whatever "Exit on close the last tab" says"""
+    app.close_all()
+    app.set_prefs(exitOnClosingLastTab=True)
+    try:
+        app.new("one\n")
+        app.new("two\n")
+        proc = app.proc
+        r = app.run("IDM_FILE_CLOSEALL")
+        assert r["ran"] is True
+        assert proc.poll() is None
+        assert len(app.docs()) == 1
+        r = app.call("close_document")
+        assert r == {"closed": True, "open_documents": 1}
+        assert proc.poll() is None
+        docs = app.docs()
+        assert len(docs) == 1 and docs[0]["bytes"] == 0 and docs[0]["modified"] is False
+    finally:
+        app.set_prefs(exitOnClosingLastTab=False)
+
+
+@pytest.mark.case("AGENT-107")
+def test_agent_107_while_the_user_answers_a_dialog_only_reading_tools_run(app):
+    """AGENT-107: While an app-modal dialog waits for the user, tools that change the editor are refused"""
+    app.new("abc\n", title="asked")
+    app.answers(real_modals=True)
+    pending = app.run_async("IDM_EDIT_COLUMNMODE")
+    try:
+        w = app.wait(lambda: app.window("_NSAlertPanel"), 5, "the Column Editor's first question")
+        with raw(app, timeout=5) as c:
+            c.request(1, "initialize", INIT["params"])
+            edit = c.request(2, "tools/call", {"name": "edit_document", "arguments": {"text": "changed\n"}})["result"]
+            went = c.request(3, "tools/call", {"name": "open_document", "arguments": {"text": "new\n"}})["result"]
+            read = c.request(4, "tools/call", {"name": "get_document", "arguments": {}})["result"]
+        app.click(w["number"], "Cancel")
+        r = pending.wait(10)
+    finally:
+        app.answers(real_modals=False)
+    assert r["ran"] is True
+    for refused, name in [(edit, "edit_document"), (went, "open_document")]:
+        assert refused["isError"] is True
+        assert refused["content"][0]["text"] == \
+            f"NotepadMac is waiting for the user to answer a dialog; {name} can run once it is closed"
+    assert read["isError"] is False and read["structuredContent"]["text"] == "abc\n"
+    assert app.text() == "abc\n" and [d["title"] for d in app.docs()].count("asked") == 1
+    app.set_text("changed\n")
+    assert app.text() == "changed\n"
+
