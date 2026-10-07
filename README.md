@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/tanderbold/NotepadMac/main/docs/icon.png" width="96" align="right" alt="NotepadMac icon">
+
 # NotepadMac end-to-end tests
 
 The black-box test suite of [NotepadMac](https://github.com/tanderbold/NotepadMac), the native
