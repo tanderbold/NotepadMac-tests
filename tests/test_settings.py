@@ -2806,11 +2806,11 @@ def test_settings_090_auto_updater_mode_and_releases_repository(papp):
 
     Covers: IDM_SETTING_PREFERENCE
     Channel: ui, prefs
-    Steps: Select "Enable on Notepad++ exit" in "Auto-updater:", set "Releases repository" to "someone/Fork", Apply; set the repository to "not-a-repo", Apply; select "Disable", Apply.
+    Steps: Select "Enable on NotepadMac exit" in "Auto-updater:", set "Releases repository" to "someone/Fork", Apply; set the repository to "not-a-repo", Apply; select "Disable", Apply.
     Expect: autoUpdateMode 2 then 0; updateRepository "someone/Fork", and "not-a-repo" (no single slash) is refused, leaving "someone/Fork".
     """
     app = papp
-    set_options(app, "MISC.", popups={"Auto-updater:": "Enable on Notepad++ exit"}, fields={"Releases repository": "someone/Fork"})
+    set_options(app, "MISC.", popups={"Auto-updater:": "Enable on NotepadMac exit"}, fields={"Releases repository": "someone/Fork"})
     s = stored(app)
     assert s.get("autoUpdateMode") == 2 and s.get("updateRepository") == "someone/Fork", s
     set_options(app, "MISC.", fields={"Releases repository": "not-a-repo"})

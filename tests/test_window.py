@@ -260,7 +260,7 @@ def test_window_009_the_window_menu_has_notepad_s_items_in_order(app):
 # ---- Help: About and Debug Info ---------------------------------------------------
 
 def about_panel(app):
-    return app.wait(lambda: app.window("About Notepad++"), message="the About panel")
+    return app.wait(lambda: app.window("About NotepadMac"), message="the About panel")
 
 
 @pytest.mark.case("WINDOW-010")
@@ -270,25 +270,32 @@ def test_window_010_about_shows_the_version_the_build_the_licence_and_this_port(
     repo = repository(app)
     app.run("IDM_ABOUT")
     w = about_panel(app)
-    assert w["title"] == "About Notepad++"
+    assert w["title"] == "About NotepadMac"
     controls = app.ui(w["number"])["controls"]
     values = [c.get("value") for c in controls if isinstance(c.get("value"), str)]
     bits = "(ARM 64-bit)" if platform.machine() == "arm64" else "(64-bit)"
-    assert f"Notepad++ v{info['NppUpstreamVersion']}   {bits}" in values
-    assert f"macOS port {info['CFBundleShortVersionString']} (build {info['CFBundleVersion']})" in values
+    assert f"NotepadMac v{info['CFBundleShortVersionString']}   {bits}" in values
+    assert f"Build {info['CFBundleVersion']}, port of Notepad++ v{info['NppUpstreamVersion']}" in values
+    # Whose it is: the credit to Notepad++'s author, and that the name is his project's.
+    assert "An unofficial macOS port. Notepad++ is by Don HO." in values
+    assert ("Notepad++ is the name of Don Ho's editor; NotepadMac is not affiliated with or endorsed "
+            "by the Notepad++ project.") in values
+    # No chameleon (Notepad++'s mark): the panel shows the application's own icon.
+    assert not (app.bundle / "Contents/Resources/chameleon.ico").exists()
+    assert not (app.bundle / "Contents/Resources/chameleon_dm.ico").exists()
     assert any(v.startswith("Build time: ") and len(v) > len("Build time: ") for v in values)
     assert any(v.startswith("This program is free software") for v in values)
     links = [c["id"] for c in controls if c.get("class") == "NSButton" and (c.get("id") or "").startswith("https://")]
     assert links == [f"https://github.com/{repo}", f"https://github.com/{repo}/issues"]
     assert "notepad-plus-plus.org" not in json.dumps(controls)
     app.click(w["number"], "OK")
-    app.wait(lambda: not app.window("About Notepad++"), message="About closed")
+    app.wait(lambda: not app.window("About NotepadMac"), message="About closed")
 
     app.call("e2e_menu_invoke", path="NotepadMac|About NotepadMac")
     w2 = about_panel(app)
     assert w2["number"] == w["number"]   # the same panel
     app.close_window(w2["number"])
-    app.wait(lambda: not app.window("About Notepad++"), message="About closed")
+    app.wait(lambda: not app.window("About NotepadMac"), message="About closed")
 
 
 @pytest.mark.case("WINDOW-011")
@@ -314,7 +321,7 @@ def test_window_012_debug_info_lists_upstream_s_fields_as_they_are_now(app):
         app.run("IDM_DEBUGINFO")
         w = app.wait(lambda: app.window("Debug Info"), message="Debug Info")
         text = next(c["value"] for c in app.ui(w["number"])["controls"] if c.get("class") == "NSTextView")
-        fields = ["Notepad++ v", "macOS port: ", "Build time: ", "Built with: Clang ", "Scintilla/Lexilla included: 5.",
+        fields = ["NotepadMac v", "Build: ", "Port of: Notepad++ v", "Build time: ", "Built with: Clang ", "Scintilla/Lexilla included: 5.",
                   f"Path: {app.executable}", "Command Line: ", "Admin mode: OFF", "Local Conf mode: OFF",
                   "Cloud Config: OFF", f"Auto-updater: disabled (GitHub Releases of {repo})", "Periodic Backup: ON",
                   "Multi-instance Mode: monoInst", "File Status Auto-Detection: cdEnabledNew", "Dark Mode: ",
@@ -369,8 +376,8 @@ def test_window_014_the_help_links_lead_to_this_port_s_pages_and_upstream_s_manu
         assert u.startswith("https://") and "notepad-plus-plus.org" not in u and "github.com/notepad-plus-plus" not in u
     tree = app.menu_tree("Help", 1)
     items = ["-" if i.get("separator") else i["title"] for i in tree]
-    assert items == ["Notepad++ Home", "Notepad++ Project Page", "Notepad++ Online User Manual",
-                     "Notepad++ Community (Forum)", "-", "Command Line Arguments…", "Debug Info…",
+    assert items == ["NotepadMac Home", "NotepadMac Project Page", "Notepad++ Online User Manual",
+                     "NotepadMac Community (Forum)", "-", "Command Line Arguments…", "Debug Info…",
                      "Check for Updates", "Set Updater Proxy…", "About NotepadMac"]
 
 
@@ -410,7 +417,7 @@ def test_window_016_check_for_updates_reports_a_failure_without_the_network(app)
         app.run("IDM_UPDATE_NPP")
         seen = wait_alert(app)     # the application answers while the check runs: this polls it
         al = alerts(seen)
-        assert len(al) == 1 and al[0]["message"] == "Notepad++ update"
+        assert len(al) == 1 and al[0]["message"] == "NotepadMac update"
         assert al[0]["buttons"] == ["OK", "Open the Releases Page"]
         info = al[0]["informative"]
         assert f"https://api.github.com/repos/{repo}/releases/latest" in info
@@ -438,7 +445,7 @@ def test_window_017_check_for_updates_offers_a_newer_release_and_says_when_there
         app.run("IDM_UPDATE_NPP")
         seen = wait_alert(app)
         al = alerts(seen)
-        assert len(al) == 1 and al[0]["message"] == "Notepad++ update" and al[0]["buttons"] == ["Yes", "No"]
+        assert len(al) == 1 and al[0]["message"] == "NotepadMac update" and al[0]["buttons"] == ["Yes", "No"]
         assert "An update package is available, do you want to download it?" in al[0]["informative"]
         assert f"NotepadMac 99 (you have v{current})" in al[0]["informative"]
         assert urls(seen) == ["https://github.com/o/r/releases/tag/v99.0.0"]

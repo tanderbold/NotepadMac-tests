@@ -389,11 +389,11 @@ def test_visual_012_the_find_dialog_looks_as_recorded(v, tmp, update_goldens):
 @pytest.mark.case("VISUAL-013")
 def test_visual_013_about_looks_as_recorded_but_for_its_version(v, tmp, update_goldens):
     v.run("IDM_ABOUT")
-    shot, w = _window_shot(v, tmp, "About Notepad++", "about")
+    shot, w = _window_shot(v, tmp, "About NotepadMac", "about")
     try:
         # The version, the build number and the build time change with every build.
         masks = [c["frame"] for c in controls(v, w["number"])
-                 if isinstance(c.get("value"), str) and c["value"].startswith(("Notepad++ v", "macOS port", "Build time"))]
+                 if isinstance(c.get("value"), str) and c["value"].startswith(("NotepadMac v", "Build ", "Build time"))]
         assert len(masks) == 3, masks
         problem = compare_golden(shot, "about", update_goldens, masks=masks)
         assert not problem, problem

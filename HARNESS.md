@@ -9,9 +9,9 @@ the app; the app only offers a few test hooks, and only when started with
 
 `harness/app.py` (`App`) copies `../npp/macos/build/NotepadMac.app` to
 `.work/<worker>/NotepadMacE2E.app`, gives the copy the bundle id
-`org.notepad-plus-plus.mac.e2e.<worker>` and signs it ad hoc. Consequences:
+`io.github.tanderbold.notepadmac.e2e.<worker>` and signs it ad hoc. Consequences:
 
-- its preferences are its own domain; the user's `org.notepad-plus-plus.mac`
+- its preferences are its own domain; the user's `io.github.tanderbold.notepadmac`
   is never read or written. `App.start()` empties the domain first
   (`defaults delete`), then writes `autoUpdateMode = 0`;
 - `CFFIXED_USER_HOME=.work/<worker>/home` moves Application Support

@@ -255,7 +255,7 @@ TAB_MENU = [
     "Pin Tab", "Save", "Save As...",
     ("Open into", ["Open Containing Folder in Finder", "Open Containing Folder in Terminal",
                    "Open Containing Folder as Workspace", None, "Open in Default Viewer"]),
-    "Rename", "Move to Trash", "Reload", "Print", None, "Read-Only in Notepad++", "Read-Only Attribute on Disk", None,
+    "Rename", "Move to Trash", "Reload", "Print", None, "Read-Only in NotepadMac", "Read-Only Attribute on Disk", None,
     ("Copy to Clipboard", ["Copy Full File Path", "Copy Filename", "Copy Current Dir. Path"]),
     ("Move Document", ["Move to Start", "Move to End", None, "Move to Other View", "Clone to Other View",
                        "Move to New Instance", "Open in New Instance"]),
@@ -288,7 +288,7 @@ def test_ui_018_the_tab_s_right_click_menu_has_notepad_s_items(app, tmp):
 
 TAB_ACTIONS = ["Close", "Close Multiple Tabs|Close All BUT This", "Close Multiple Tabs|Close All to the Left",
                "Close Multiple Tabs|Close All to the Right", "Close Multiple Tabs|Close All Unchanged", "Save",
-               "Reload", "Read-Only in Notepad++", "Copy to Clipboard|Copy Full File Path",
+               "Reload", "Read-Only in NotepadMac", "Copy to Clipboard|Copy Full File Path",
                "Copy to Clipboard|Copy Filename", "Copy to Clipboard|Copy Current Dir. Path",
                "Move Document|Move to Start", "Move Document|Move to End", "Move Document|Move to Other View",
                "Move Document|Clone to Other View", "Apply Color to Tab|Apply Color 1",

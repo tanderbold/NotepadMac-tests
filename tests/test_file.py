@@ -731,7 +731,7 @@ def test_file_042_the_tab_context_menu_s_close_commands_act_like_the_file_menu_s
     tree = app.call("e2e_menu", context="tab")["tree"]
     tops = [i.get("title") for i in tree]
     assert tops[:12] == ["Close", "Close Multiple Tabs", "Pin Tab", "Save", "Save As...", "Open into", "Rename",
-                         "Move to Trash", "Reload", "Print", None, "Read-Only in Notepad++"]
+                         "Move to Trash", "Reload", "Print", None, "Read-Only in NotepadMac"]
     multi = [i.get("title") for i in tree[1]["items"]]
     assert multi == ["Close All BUT This", "Close All BUT Pinned", "Close All to the Left", "Close All to the Right",
                      "Close All Unchanged"]
@@ -861,7 +861,7 @@ def test_file_049_reloading_a_document_with_edits_asks_first(app, tmp):
     app.run("IDM_FILE_RELOAD")
     al = alerts(app.modal_log())
     assert len(al) == 1 and al[0]["message"] == "Reload" and al[0]["buttons"] == ["Yes", "No"]
-    assert al[0]["informative"] == "Are you sure you want to reload the current file and lose the changes made in Notepad++?"
+    assert al[0]["informative"] == "Are you sure you want to reload the current file and lose the changes made in NotepadMac?"
     assert app.text() == "mine\n" and app.doc()["modified"]
     app.answers(alerts=[1])
     app.run("IDM_FILE_RELOAD")
@@ -924,7 +924,7 @@ def test_file_052_a_change_on_disk_to_a_document_with_edits_warns_that_the_edits
     app.answers(alerts=[2])
     reactivate(app)
     al = alerts(wait_log(app, lambda es: alerts(es)))
-    assert "Do you want to reload it and lose the changes made in Notepad++?" in al[0]["informative"]
+    assert "Do you want to reload it and lose the changes made in NotepadMac?" in al[0]["informative"]
     assert app.text() == "mine\n" and app.doc()["modified"]
 
 

@@ -46,7 +46,7 @@ def test_agent_001_initialize_names_the_server_and_negotiates_the_protocol_vers(
             res = r["result"]
             assert res["protocolVersion"] == want
             assert res["serverInfo"]["name"] == "NotepadMac"
-            assert res["serverInfo"]["title"] == "NotepadMac (Notepad++ for macOS)"
+            assert res["serverInfo"]["title"] == "NotepadMac"
             assert res["serverInfo"]["version"] == version
             assert res["capabilities"]["tools"]["listChanged"] is False
             assert "one-based" in res["instructions"]

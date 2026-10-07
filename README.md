@@ -14,7 +14,7 @@ looks at the application only from the outside.
 ## How it works
 
 - `harness/app.py` copies a build of NotepadMac under its own bundle id
-  (`org.notepad-plus-plus.mac.e2e.<worker>`), with its own home folder, preferences and socket,
+  (`io.github.tanderbold.notepadmac.e2e.<worker>`), with its own home folder, preferences and socket,
   so a test never touches a real user's settings or a running NotepadMac.
 - It starts the copy with `NPPMAC_E2E=1` and talks to it over the application's MCP agent
   socket. With that variable, and only then, the application adds `e2e_*` tools

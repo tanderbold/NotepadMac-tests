@@ -1,7 +1,7 @@
 """Launching an isolated copy of NotepadMac and talking to it.
 
 The copy lives in .work/<worker>/NotepadMacE2E.app under its own bundle id, so
-its preferences are a domain of its own (the user's org.notepad-plus-plus.mac is
+its preferences are a domain of its own (the user's io.github.tanderbold.notepadmac is
 never read or written); CFFIXED_USER_HOME moves its Application Support folder
 (session, plugins, user languages, macros, the agent socket's default place)
 into a scratch home; NPPMAC_E2E=1 turns on the e2e_* tools and the queued answers
@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_BUILD = ROOT.parent / "npp" / "macos" / "build" / "NotepadMac.app"
-BASE_BUNDLE_ID = "org.notepad-plus-plus.mac.e2e"
+BASE_BUNDLE_ID = "io.github.tanderbold.notepadmac.e2e"
 
 
 class ToolError(Exception):
